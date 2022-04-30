@@ -1,4 +1,4 @@
-# ESI2022 Team E
+# ESI2022 Team E backend
 
 The source code of Enterprise System Integration 2022 spring project of Team E:
 
