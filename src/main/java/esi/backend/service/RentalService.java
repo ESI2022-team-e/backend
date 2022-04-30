@@ -1,7 +1,7 @@
-package esi.backendnew.service;
+package esi.backend.service;
 
-import esi.backendnew.model.Rental;
-import esi.backendnew.repository.RentalRepository;
+import esi.backend.model.Rental;
+import esi.backend.repository.RentalRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

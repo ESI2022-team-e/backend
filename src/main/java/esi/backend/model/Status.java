@@ -1,4 +1,4 @@
-package esi.backendnew.model;
+package esi.backend.model;
 
 public enum Status {
     UPCOMING,

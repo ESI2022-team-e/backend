@@ -1,6 +1,6 @@
-package esi.backendnew.repository;
+package esi.backend.repository;
 
-import esi.backendnew.model.Car;
+import esi.backend.model.Car;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.UUID;

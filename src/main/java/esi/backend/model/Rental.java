@@ -1,4 +1,4 @@
-package esi.backendnew.model;
+package esi.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

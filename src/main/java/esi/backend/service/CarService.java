@@ -1,7 +1,7 @@
-package esi.backendnew.service;
+package esi.backend.service;
 
-import esi.backendnew.model.Car;
-import esi.backendnew.repository.CarRepository;
+import esi.backend.model.Car;
+import esi.backend.repository.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

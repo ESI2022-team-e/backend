@@ -1,6 +1,6 @@
-package esi.backendnew.controller;
-import esi.backendnew.model.Car;
-import esi.backendnew.service.CarService;
+package esi.backend.controller;
+import esi.backend.model.Car;
+import esi.backend.service.CarService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
