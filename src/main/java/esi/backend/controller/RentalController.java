@@ -25,7 +25,7 @@ public class RentalController {
         return rentalService.getAllRentals(carId);
     }
 
-    @RequestMapping("/cars/rentals/{rentalId}")
+    @RequestMapping("/cars/{carId}/rentals/{rentalId}")
     public Optional<Rental> getRental(@PathVariable UUID rentalId) {
         return rentalService.getRental(rentalId);
     }
@@ -45,7 +45,7 @@ public class RentalController {
         rentalService.updateRental(rental);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/cars/rentals/{rentalId}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/cars/{carId}/rentals/{rentalId}")
     @PreAuthorize("hasRole('MANAGER')")
     public void deleteRental(@PathVariable UUID rentalId) {
         rentalService.deleteRental(rentalId);
