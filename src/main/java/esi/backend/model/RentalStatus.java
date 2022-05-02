@@ -1,6 +1,6 @@
 package esi.backend.model;
 
-public enum Status {
+public enum RentalStatus {
     UPCOMING,
     CURRENT,
     DONE

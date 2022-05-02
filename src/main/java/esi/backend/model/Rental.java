@@ -18,7 +18,7 @@ public class Rental {
     private String dropoff_time;
     private String pickup_location;
     private String dropoff_location;
-    private Status status;
+    private RentalStatus status;
     @ManyToOne
     @JoinColumn(name = "car_id")
     @JsonIgnore
@@ -27,7 +27,7 @@ public class Rental {
     public Rental() {
     }
 
-    public Rental(UUID id, String pickup_date, String dropoff_date, String pickup_time, String dropoff_time, String pickup_location, String dropoff_location, Status status, Car car) {
+    public Rental(UUID id, String pickup_date, String dropoff_date, String pickup_time, String dropoff_time, String pickup_location, String dropoff_location, RentalStatus status, Car car) {
         this.id = id;
         this.pickup_date = pickup_date;
         this.dropoff_date = dropoff_date;
@@ -95,11 +95,11 @@ public class Rental {
         this.dropoff_location = dropoff_location;
     }
 
-    public Status getStatus() {
+    public RentalStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(RentalStatus status) {
         this.status = status;
     }
 

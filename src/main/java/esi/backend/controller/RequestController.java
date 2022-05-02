@@ -24,7 +24,6 @@ public class RequestController {
         this.carService = carService;
     }
 
-    // TODO get all requests no matter the car?
     @RequestMapping("cars/{carId}/requests")
     public List<Request> getAllRequests(@PathVariable UUID carId) {
         return requestService.getAllRequests(carId);
@@ -35,6 +34,7 @@ public class RequestController {
         return requestService.getRequest(id);
     }
 
+    // TODO default status should be WAITING_FOR_ACCEPTANCE
     @RequestMapping(method = RequestMethod.POST, value = "/cars/{carId}/requests")
     public void addRequest(@RequestBody Request request, @PathVariable UUID carId) {
         Optional<Car> optionalCar = carService.getCar(carId);
@@ -48,13 +48,15 @@ public class RequestController {
     public void updateRequest(@RequestBody Request request, @PathVariable UUID carId, @PathVariable UUID id) {
         Request req = requestService.getRequest(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Request with id " + id + "not found"));
-        if (request.getStatus() != req.getStatus()) {
+        if (request.getStatus() != null) { // TODO Accept request -> A rental is created
             req.setStatus(request.getStatus());
         }
-        if (request.getPickup_date().equals(req.getPickup_date())) {
-            req.setPickup_date(request.getPickup_date());
+        if (request.getPickup_datetime() != null) {
+            req.setPickup_datetime(request.getPickup_datetime());
         }
-        // TODO what else needs to be added here?
+        if (request.getDropoff_datetime() != null) {
+            req.setDropoff_datetime(request.getDropoff_datetime());
+        }
         requestService.updateRequest(req);
     }
 
