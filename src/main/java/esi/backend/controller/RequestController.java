@@ -26,9 +26,15 @@ public class RequestController {
         this.rentalService = rentalService;
     }
 
+    @RequestMapping("requests")
+    public List<Request> getAllRequests()
+    {
+        return requestService.getAllRequests();
+    }
+
     @RequestMapping("cars/{carId}/requests")
-    public List<Request> getAllRequests(@PathVariable UUID carId) {
-        return requestService.getAllRequests(carId);
+    public List<Request> getAllRequestsByCarId(@PathVariable UUID carId) {
+        return requestService.getAllRequestsByCarId(carId);
     }
 
     @RequestMapping("cars/requests/{id}")

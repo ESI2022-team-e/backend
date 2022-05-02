@@ -1,10 +1,12 @@
 package esi.backend.service;
 
+import esi.backend.model.Car;
 import esi.backend.model.Request;
 import esi.backend.repository.RequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -15,7 +17,13 @@ public class RequestService {
     @Autowired
     private RequestRepository requestRepository;
 
-    public List<Request> getAllRequests(UUID carId) {
+    public List<Request> getAllRequests() {
+        List<Request> requests = new ArrayList<>();
+        requestRepository.findAll().forEach(requests::add);
+        return requests;
+    }
+
+    public List<Request> getAllRequestsByCarId(UUID carId) {
         return requestRepository.findByCarId(carId);
     }
 
