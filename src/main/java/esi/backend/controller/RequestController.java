@@ -61,6 +61,9 @@ public class RequestController {
         if (request.getDropoff_datetime() != null) {
             req.setDropoff_datetime(request.getDropoff_datetime());
         }
+        if (request.getDropoff_location() != null) {
+            req.setDropoff_location(request.getDropoff_location());
+        }
         if (request.getStatus() != null) {
             req.setStatus(request.getStatus());
             if (request.getStatus().equals(RequestStatus.ACCEPTED)) { // ei saa seda kaasa anda, sellel on ainult üks value olemas
