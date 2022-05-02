@@ -3,6 +3,7 @@ package esi.backend.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -12,10 +13,8 @@ public class Rental {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    private String pickup_date;
-    private String dropoff_date;
-    private String pickup_time;
-    private String dropoff_time;
+    private LocalDateTime pickup_datetime;
+    private LocalDateTime dropoff_datetime;
     private String pickup_location;
     private String dropoff_location;
     private RentalStatus status;
@@ -27,12 +26,10 @@ public class Rental {
     public Rental() {
     }
 
-    public Rental(UUID id, String pickup_date, String dropoff_date, String pickup_time, String dropoff_time, String pickup_location, String dropoff_location, RentalStatus status, Car car) {
+    public Rental(UUID id, LocalDateTime pickup_datetime, LocalDateTime dropoff_datetime, String pickup_location, String dropoff_location, RentalStatus status, Car car) {
         this.id = id;
-        this.pickup_date = pickup_date;
-        this.dropoff_date = dropoff_date;
-        this.pickup_time = pickup_time;
-        this.dropoff_time = dropoff_time;
+        this.pickup_datetime = pickup_datetime;
+        this.dropoff_datetime = dropoff_datetime;
         this.pickup_location = pickup_location;
         this.dropoff_location = dropoff_location;
         this.status = status;
@@ -47,38 +44,21 @@ public class Rental {
         this.id = id;
     }
 
-    public String getPickup_date() {
-        return pickup_date;
+    public LocalDateTime getPickup_datetime() {
+        return pickup_datetime;
     }
 
-    public void setPickup_date(String pickup_date) {
-        this.pickup_date = pickup_date;
+    public void setPickup_datetime(LocalDateTime pickup_date) {
+        this.pickup_datetime = pickup_date;
     }
 
-    public String getDropoff_date() {
-        return dropoff_date;
+    public LocalDateTime getDropoff_datetime() {
+        return dropoff_datetime;
     }
 
-    public void setDropoff_date(String dropoff_date) {
-        this.dropoff_date = dropoff_date;
+    public void setDropoff_datetime(LocalDateTime dropoff_date) {
+        this.dropoff_datetime = dropoff_date;
     }
-
-    public String getPickup_time() {
-        return pickup_time;
-    }
-
-    public void setPickup_time(String pickup_time) {
-        this.pickup_time = pickup_time;
-    }
-
-    public String getDropoff_time() {
-        return dropoff_time;
-    }
-
-    public void setDropoff_time(String dropoff_time) {
-        this.dropoff_time = dropoff_time;
-    }
-
     public String getPickup_location() {
         return pickup_location;
     }
