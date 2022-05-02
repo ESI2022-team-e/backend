@@ -38,7 +38,9 @@ public class RequestController {
     @RequestMapping(method = RequestMethod.POST, value = "/cars/{carId}/requests")
     public void addRequest(@RequestBody Request request, @PathVariable UUID carId) {
         Optional<Car> optionalCar = carService.getCar(carId);
-        request.setCar(optionalCar.get());
+        if (optionalCar.isPresent()) {
+            request.setCar(optionalCar.get());
+        } else throw new ResourceNotFoundException("Car with id" + carId + "not found");
         requestService.addRequest(request);
     }
 
@@ -49,7 +51,7 @@ public class RequestController {
         if (request.getStatus() != req.getStatus()) {
             req.setStatus(request.getStatus());
         }
-        if (request.getPickup_date() != req.getPickup_date()) {
+        if (request.getPickup_date().equals(req.getPickup_date())) {
             req.setPickup_date(request.getPickup_date());
         }
         // TODO what else needs to be added here?
