@@ -2,6 +2,7 @@ package esi.backend.service;
 
 import esi.backend.model.Rental;
 import esi.backend.repository.RentalRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.UUID;
 @Service
 public class RentalService {
 
+    @Autowired
     private RentalRepository rentalRepository;
 
     public List<Rental> getAllRentals(UUID carId) {

@@ -2,6 +2,7 @@ package esi.backend.service;
 
 import esi.backend.model.Request;
 import esi.backend.repository.RequestRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.UUID;
 @Service
 public class RequestService {
 
+    @Autowired
     private RequestRepository requestRepository;
 
     public List<Request> getAllRequests(UUID carId) {

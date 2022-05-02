@@ -13,21 +13,19 @@ public class Request {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private String pickup_date;
-    private String dropoff_date;
+    private String dropoff_date; // TODO datetime?
     private String pickup_time;
     private String dropoff_time;
     private String pickup_location;
     private String dropoff_location;
     private Status status; // TODO can we use the same status?
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "car_id")
     @JsonIgnore
     private Car car;
     // TODO add customer
 
-    public Request() {
-
-    }
+    public Request() {}
 
     public Request(UUID id, String pickup_date, String dropoff_date, String pickup_time, String dropoff_time, String pickup_location, String dropoff_location, Status status, Car car) {
         this.id = id;
