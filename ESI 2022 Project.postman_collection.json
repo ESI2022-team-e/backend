@@ -1,0 +1,130 @@
+{
+	"info": {
+		"_postman_id": "83e6b1b2-72cf-4657-9ad1-c4dbc0b31914",
+		"name": "ESI 2022 Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CarController",
+			"item": [
+				{
+					"name": "Get all cars",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/api/cars",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a car",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/api/cars/a40f9cd3-b0bf-4aaa-948c-2385a0aa193c",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars",
+								"a40f9cd3-b0bf-4aaa-948c-2385a0aa193c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update car information",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"daily_cost\": 43.0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8081/api/cars/cf9dc27d-5fa6-4f92-bb72-a59cb92f01f3",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars",
+								"cf9dc27d-5fa6-4f92-bb72-a59cb92f01f3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add a car",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"mark\": \"Mazda\",\r\n    \"model\": \"3\",\r\n    \"nr_of_seats\": 5,\r\n    \"transmission_type\": \"manual\",\r\n    \"fuel_type\": \"diesel\",\r\n    \"daily_cost\": 45.0,\r\n    \"year\": 2016,\r\n    \"licence_plate\": \"ABC123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8081/api/cars",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a car",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/api/cars/cf9dc27d-5fa6-4f92-bb72-a59cb92f01f3",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars",
+								"cf9dc27d-5fa6-4f92-bb72-a59cb92f01f3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
