@@ -136,7 +136,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"pickup_date\": \"2022-10-10\",\r\n    \"dropoff_date\": \"2022-11-11\",\r\n    \"pickup_time\": \"17.00\",\r\n    \"dropoff_time\": \"17.00\",\r\n    \"pickup_location\": \"Turu tn 5\",\r\n    \"dropoff_location\": \"Delta\",\r\n    \"status\": \"DONE\"\r\n}",
+							"raw": "{\r\n    \"pickup_datetime\": \"2022-01-10T17:09:42.411\",\r\n    \"dropoff_datetime\": \"2022-01-13T17:09:42.411\",\r\n    \"pickup_location\": \"Turu tn 5\",\r\n    \"dropoff_location\": \"Delta\",\r\n    \"status\": \"PENDING\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -144,7 +144,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8081/api/cars/a81bc81b-dead-4e5d-abff-90865d1e13b1/requests",
+							"raw": "localhost:8081/api/cars/cf9dc27d-5fa6-4f92-bb72-a59cb92f01f3/requests",
 							"host": [
 								"localhost"
 							],
@@ -152,7 +152,7 @@
 							"path": [
 								"api",
 								"cars",
-								"a81bc81b-dead-4e5d-abff-90865d1e13b1",
+								"cf9dc27d-5fa6-4f92-bb72-a59cb92f01f3",
 								"requests"
 							]
 						}
@@ -186,7 +186,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8081/api/cars/requests/331c7ea3-474f-4e37-a1c0-f5eb19efb1dd",
+							"raw": "localhost:8081/api/cars/requests/9c91ba96-7b45-42b7-936f-01e298c29ea7",
 							"host": [
 								"localhost"
 							],
@@ -195,20 +195,20 @@
 								"api",
 								"cars",
 								"requests",
-								"331c7ea3-474f-4e37-a1c0-f5eb19efb1dd"
+								"9c91ba96-7b45-42b7-936f-01e298c29ea7"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "New Request",
+					"name": "Change request's status",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"pickup_date\": \"2021-10-10\"\r\n}",
+							"raw": "{\r\n    \"status\": \"ACCEPTED\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -216,7 +216,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8081/api/cars/a81bc81b-dead-4e5d-abff-90865d1e13b1/requests/331c7ea3-474f-4e37-a1c0-f5eb19efb1dd",
+							"raw": "localhost:8081/api/cars/cf9dc27d-5fa6-4f92-bb72-a59cb92f01f3/requests/983ea2e1-8ab6-4f2d-9281-8a090fecf4db",
 							"host": [
 								"localhost"
 							],
@@ -224,16 +224,16 @@
 							"path": [
 								"api",
 								"cars",
-								"a81bc81b-dead-4e5d-abff-90865d1e13b1",
+								"cf9dc27d-5fa6-4f92-bb72-a59cb92f01f3",
 								"requests",
-								"331c7ea3-474f-4e37-a1c0-f5eb19efb1dd"
+								"983ea2e1-8ab6-4f2d-9281-8a090fecf4db"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "New Request",
+					"name": "Delete request",
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -248,6 +248,25 @@
 								"cars",
 								"requests",
 								"331c7ea3-474f-4e37-a1c0-f5eb19efb1dd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all requests",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/api/requests",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"requests"
 							]
 						}
 					},
