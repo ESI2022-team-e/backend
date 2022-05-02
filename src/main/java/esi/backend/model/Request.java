@@ -17,7 +17,7 @@ public class Request {
     private LocalDateTime dropoff_datetime;
     private String pickup_location;
     private String dropoff_location;
-    private RequestStatus status; // TODO can we use the same status?
+    private RequestStatus status;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "car_id")
     @JsonIgnore
