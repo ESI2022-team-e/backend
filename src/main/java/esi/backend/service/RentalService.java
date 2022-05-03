@@ -17,7 +17,7 @@ public class RentalService {
         return (List<Rental>) rentalRepository.findAll();
     }
 
-    public List<Rental> getAllRentals(UUID carId) {
+    public List<Rental> getRentalsByCar(UUID carId) {
         return rentalRepository.findByCarId(carId);
     }
 
@@ -25,9 +25,11 @@ public class RentalService {
         return rentalRepository.findById(id);
     }
 
-//    public List<Rental> getAllCustomerRentals(Integer customerId) {
-//        return rentalRepository.findByCustomerId(customerId);
-//    }
+    /*
+    public List<Rental> getAllCustomerRentals(Integer customerId) {
+        return rentalRepository.findByCustomerId(customerId);
+    }
+     */
 
     public void addRental(Rental rental) {
         rentalRepository.save(rental);
