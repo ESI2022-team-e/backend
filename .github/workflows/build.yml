@@ -17,12 +17,15 @@ jobs:
 
     services:
       postgres:
-        image: postgres
+        image: postgres:latest
 
         env:
+          POSTGRES_HOST: localhost
+          DATABASE_URL: jdbc:postgresql://localhost:5432/project
           POSTGRES_DB: project
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
+          POSTGRES_PORT: 5432
         ports:
           # maps tcp port 5432 on service container to the host
           - 5432:5432
