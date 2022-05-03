@@ -32,7 +32,7 @@ public class CarService {
         carRepository.save(car);
     }
 
-    public void updateCar(UUID id, Car car) {
+    public void updateCar(Car car) {
         carRepository.save(car);
     }
 

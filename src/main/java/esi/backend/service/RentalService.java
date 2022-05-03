@@ -25,6 +25,10 @@ public class RentalService {
         return rentalRepository.findById(id);
     }
 
+//    public List<Rental> getAllCustomerRentals(Integer customerId) {
+//        return rentalRepository.findByCustomerId(customerId);
+//    }
+
     public void addRental(Rental rental) {
         rentalRepository.save(rental);
     }

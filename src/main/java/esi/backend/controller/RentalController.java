@@ -22,7 +22,6 @@ public class RentalController {
 
 
     @RequestMapping("/rentals")
-    @PreAuthorize("hasRole('MANAGER')")
     public List<Rental> getAllRentals() {
         return rentalService.getAllRentals();
     }
@@ -35,9 +34,23 @@ public class RentalController {
 
     @RequestMapping("/cars/{carId}/rentals/{rentalId}")
     @PreAuthorize("hasRole('MANAGER')")
-    public Optional<Rental> getRental(@PathVariable UUID rentalId) {
+    public Optional<Rental> getRental(@PathVariable UUID carId, @PathVariable UUID rentalId) {
         return rentalService.getRental(rentalId);
     }
+
+    /*
+    @RequestMapping("/customers/{customerId}/rentals")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public List<Rental> getAllCustomerRentals(@PathVariable Integer customerId) {
+        return rentalService.getAllCustomerRentals(customerId);
+    }
+
+    @RequestMapping("/customers/{customerId}/rentals/{rentalId}")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public Optional<Rental> getCustomerRental(@PathVariable UUID customerId, @PathVariable UUID rentalId) {
+        return rentalService.getRental(rentalId);
+    }*/
+
 
     @RequestMapping(method = RequestMethod.POST, value = "/cars/{carId}/rentals")
     @PreAuthorize("hasRole('MANAGER')")
@@ -56,7 +69,7 @@ public class RentalController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/cars/{carId}/rentals/{rentalId}")
     @PreAuthorize("hasRole('MANAGER')")
-    public void deleteRental(@PathVariable UUID rentalId) {
+    public void deleteRental(@PathVariable UUID rentalId, @PathVariable String carId) {
         rentalService.deleteRental(rentalId);
     }
 

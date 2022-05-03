@@ -7,3 +7,6 @@ INSERT INTO cars (id,mark, model, nr_of_seats, transmission_type, fuel_type, dai
 INSERT INTO roles(id,name) VALUES
   (1,'ROLE_CUSTOMER'),
   (2,'ROLE_MANAGER');
+
+INSERT INTO rentals (id, pickup_date, dropoff_date, pickup_time, dropoff_time, pickup_location, dropoff_location, status, car_id) VALUES
+  ('a81bc81b-dead-6e5d-ad75-90865d1e13b1','20.01.2022','22.01.2022','1:00PM','2:00PM','Lõunakeskus','Kesklinn', 1, 'a81bc81b-dead-4e5d-abff-90865d1e13b1');
