@@ -37,7 +37,7 @@ public class RequestController {
         return requestService.getAllRequestsByCarId(carId);
     }
 
-    @RequestMapping("cars/requests/{id}")
+    @RequestMapping("cars/{carId}/requests/{id}")
     public Optional<Request> getRequest(@PathVariable UUID id) {
         return requestService.getRequest(id);
     }
@@ -66,14 +66,14 @@ public class RequestController {
         }
         if (request.getStatus() != null) {
             req.setStatus(request.getStatus());
-            if (request.getStatus().equals(RequestStatus.ACCEPTED)) { // ei saa seda kaasa anda, sellel on ainult üks value olemas
+            if (request.getStatus().equals(RequestStatus.ACCEPTED)) {
                 createRental(req);
             }
         }
         requestService.updateRequest(req);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/cars/requests/{id}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/cars/{carId}/requests/{id}")
     public void deleteRequest(@PathVariable UUID id) {
         requestService.deleteRequest(id);
     }
