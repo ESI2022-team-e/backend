@@ -31,8 +31,7 @@ public class RequestController {
 
     @RequestMapping("requests")
     @PreAuthorize("hasRole('MANAGER')")
-    public List<Request> getAllRequests()
-    {
+    public List<Request> getAllRequests() {
         return requestService.getAllRequests();
     }
 
@@ -71,8 +70,11 @@ public class RequestController {
             req.setDropoff_location(request.getDropoff_location());
         }
         if (request.getStatus() != null) {
-            req.setStatus(request.getStatus());
+            if (request.getStatus().equals(RequestStatus.CANCELLED) || request.getStatus().equals(RequestStatus.REJECTED) || request.getStatus().equals(RequestStatus.PENDING)) {
+                req.setStatus(request.getStatus());
+            }
             if (request.getStatus().equals(RequestStatus.ACCEPTED) && currentUser.getAuthorities().contains(ERole.ROLE_MANAGER)) {
+                req.setStatus(request.getStatus());
                 createRental(req);
             }
         }
