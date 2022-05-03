@@ -20,6 +20,8 @@ jobs:
         image: postgres:latest
 
         env:
+          POSTGRES_HOST: localhost
+          DATABASE_URL: jdbc:postgresql://localhost:5432/project
           POSTGRES_DB: project
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -61,4 +63,4 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
         with:
-          arguments: build --debug --stacktrace
+          arguments: build --info --stacktrace
