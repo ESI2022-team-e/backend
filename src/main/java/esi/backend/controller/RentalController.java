@@ -3,6 +3,7 @@ package esi.backend.controller;
 import esi.backend.model.Car;
 import esi.backend.model.Rental;
 import esi.backend.service.RentalService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
@@ -19,34 +20,44 @@ public class RentalController {
         this.rentalService = rentalService;
     }
 
+
+    @RequestMapping("/rentals")
+    @PreAuthorize("hasRole('MANAGER')")
+    public List<Rental> getAllRentals() {
+        return rentalService.getAllRentals();
+    }
+
     @RequestMapping("/cars/{carId}/rentals")
+    @PreAuthorize("hasRole('MANAGER')")
     public List<Rental> getAllRentals(@PathVariable UUID carId) {
         return rentalService.getAllRentals(carId);
     }
 
-    @RequestMapping("/cars/rentals/{id}")
-    public Optional<Rental> getRental(@PathVariable UUID id) {
-        return rentalService.getRental(id);
+    @RequestMapping("/cars/{carId}/rentals/{rentalId}")
+    @PreAuthorize("hasRole('MANAGER')")
+    public Optional<Rental> getRental(@PathVariable UUID rentalId) {
+        return rentalService.getRental(rentalId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/cars/{carId}/rentals")
+    @PreAuthorize("hasRole('MANAGER')")
     public void addRental(@RequestBody Rental rental, @PathVariable UUID carId) {
         rental.setCar(new Car());
         rentalService.addRental(rental);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}/rentals/{id}")
+    @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}/rentals/{rentalId}")
+    @PreAuthorize("hasRole('MANAGER')")
     public void updateRental(@RequestBody Rental rental, @PathVariable UUID
-            carId, @PathVariable UUID id) {
+            carId, @PathVariable UUID rentalId) {
         rental.setCar(new Car());
         rentalService.updateRental(rental);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value
-            = "/cars/rentals/{id}")
-    public void deleteRental(@PathVariable UUID id) {
-        rentalService.deleteRental(id);
+    @RequestMapping(method = RequestMethod.DELETE, value = "/cars/{carId}/rentals/{rentalId}")
+    @PreAuthorize("hasRole('MANAGER')")
+    public void deleteRental(@PathVariable UUID rentalId) {
+        rentalService.deleteRental(rentalId);
     }
-
 
 }
