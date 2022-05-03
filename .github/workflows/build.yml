@@ -17,15 +17,12 @@ jobs:
 
     services:
       postgres:
-        image: postgres:latest
+        image: postgres
 
         env:
-          POSTGRES_HOST: localhost
-          DATABASE_URL: jdbc:postgresql://localhost:5432/project
           POSTGRES_DB: project
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_PORT: 5432
         ports:
           # maps tcp port 5432 on service container to the host
           - 5432:5432
@@ -63,4 +60,10 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
         with:
-          arguments: build --info --stacktrace
+          arguments: build
+        env:
+          # The hostname used to communicate with the PostgreSQL service container
+          POSTGRES_HOST: localhost
+          # The default PostgreSQL port
+          POSTGRES_PORT: 5432
+          PGPASSWORD: postgres
