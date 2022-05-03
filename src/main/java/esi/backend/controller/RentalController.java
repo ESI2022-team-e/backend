@@ -20,12 +20,21 @@ public class RentalController {
         this.rentalService = rentalService;
     }
 
+
+    @RequestMapping("/rentals")
+    @PreAuthorize("hasRole('MANAGER')")
+    public List<Rental> getAllRentals() {
+        return rentalService.getAllRentals();
+    }
+
     @RequestMapping("/cars/{carId}/rentals")
+    @PreAuthorize("hasRole('MANAGER')")
     public List<Rental> getAllRentals(@PathVariable UUID carId) {
         return rentalService.getAllRentals(carId);
     }
 
     @RequestMapping("/cars/{carId}/rentals/{rentalId}")
+    @PreAuthorize("hasRole('MANAGER')")
     public Optional<Rental> getRental(@PathVariable UUID rentalId) {
         return rentalService.getRental(rentalId);
     }
@@ -50,6 +59,5 @@ public class RentalController {
     public void deleteRental(@PathVariable UUID rentalId) {
         rentalService.deleteRental(rentalId);
     }
-
 
 }
