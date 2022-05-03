@@ -5,6 +5,9 @@ import esi.backend.model.*;
 import esi.backend.service.CarService;
 import esi.backend.service.RentalService;
 import esi.backend.service.RequestService;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,17 +30,20 @@ public class RequestController {
     }
 
     @RequestMapping("requests")
+    @PreAuthorize("hasRole('MANAGER')")
     public List<Request> getAllRequests()
     {
         return requestService.getAllRequests();
     }
 
     @RequestMapping("cars/{carId}/requests")
+    @PreAuthorize("hasRole('MANAGER')")
     public List<Request> getAllRequestsByCarId(@PathVariable UUID carId) {
         return requestService.getAllRequestsByCarId(carId);
     }
 
     @RequestMapping("cars/{carId}/requests/{id}")
+    @PreAuthorize("hasRole('MANAGER')")
     public Optional<Request> getRequest(@PathVariable UUID id) {
         return requestService.getRequest(id);
     }
@@ -52,7 +58,7 @@ public class RequestController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}/requests/{id}")
-    public void updateRequest(@RequestBody Request request, @PathVariable UUID carId, @PathVariable UUID id) {
+    public void updateRequest(@AuthenticationPrincipal final UserDetails currentUser, @RequestBody Request request, @PathVariable UUID carId, @PathVariable UUID id) {
         Request req = requestService.getRequest(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Request with id " + id + "not found"));
         if (request.getPickup_datetime() != null) {
@@ -66,7 +72,7 @@ public class RequestController {
         }
         if (request.getStatus() != null) {
             req.setStatus(request.getStatus());
-            if (request.getStatus().equals(RequestStatus.ACCEPTED)) {
+            if (request.getStatus().equals(RequestStatus.ACCEPTED) && currentUser.getAuthorities().contains(ERole.ROLE_MANAGER)) {
                 createRental(req);
             }
         }
