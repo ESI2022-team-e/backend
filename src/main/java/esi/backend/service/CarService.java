@@ -22,11 +22,9 @@ public class CarService {
         return cars;
     }
 
-
     public Optional<Car> getCar(UUID id) {
         return carRepository.findById(id);
     }
-
 
     public void addCar(Car car) {
         carRepository.save(car);
