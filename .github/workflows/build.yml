@@ -7,20 +7,18 @@ on:
   #pull_request:
 
 jobs:
-  postgres:
-    # containers must run in Linux based operating systems
+
+  build:
+
     runs-on: ubuntu-latest
+
     # Docker Hub image that `postgres-job` executes in
     container: node:latest
 
-    # service containers to run with `postgres-job`
     services:
-      # label used to access the service container
       postgres:
-        # Docker Hub image
         image: postgres:latest
-        # service environment variables
-        # `POSTGRES_HOST` is `postgres`
+
         env:
           POSTGRES_DB: project
           POSTGRES_USER: postgres
@@ -36,11 +34,14 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
+
     steps:
+      - uses: actions/checkout@v3
+
       - name: Install PostgreSQL client
         run: |
-          apt-get update
-          apt-get install --yes postgresql-client
+             apt-get update
+             apt-get install --yes postgresql-client
 
       # queries database with postgres client
       - name: Query database
@@ -49,14 +50,6 @@ jobs:
           # postgress password is required; alternatively, you can run:
           # `PGPASSWORD=postgres_password psql ...`
           PGPASSWORD: postgres
-
-  build:
-    needs: postgres
-    
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
