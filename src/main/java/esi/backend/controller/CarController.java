@@ -39,7 +39,7 @@ public class CarController {
     @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}")
     @PreAuthorize("hasRole('MANAGER')")
     public void updateCar(@RequestBody Car car, @PathVariable UUID carId) {
-        carService.updateCar(carId, car);
+        carService.updateCar(car, carId);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/cars/{carId}")
