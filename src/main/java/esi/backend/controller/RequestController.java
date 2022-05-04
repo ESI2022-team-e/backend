@@ -57,44 +57,12 @@ public class RequestController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}/requests/{id}")
-    public void updateRequest(@AuthenticationPrincipal final UserDetails currentUser, @RequestBody Request request, @PathVariable UUID carId, @PathVariable UUID id) {
-        Request req = requestService.getRequest(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Request with id " + id + "not found"));
-        if (request.getPickup_datetime() != null) {
-            req.setPickup_datetime(request.getPickup_datetime());
-        }
-        if (request.getDropoff_datetime() != null) {
-            req.setDropoff_datetime(request.getDropoff_datetime());
-        }
-        if (request.getDropoff_location() != null) {
-            req.setDropoff_location(request.getDropoff_location());
-        }
-        if (request.getStatus() != null) {
-            if (request.getStatus().equals(RequestStatus.CANCELLED) || request.getStatus().equals(RequestStatus.REJECTED) || request.getStatus().equals(RequestStatus.PENDING)) {
-                req.setStatus(request.getStatus());
-            }
-            if (request.getStatus().equals(RequestStatus.ACCEPTED) && currentUser.getAuthorities().contains(ERole.ROLE_MANAGER)) {
-                req.setStatus(request.getStatus());
-                createRental(req);
-            }
-        }
-        requestService.updateRequest(req);
+    public void updateRequest(@AuthenticationPrincipal final UserDetails currentUser, @RequestBody Request request, @PathVariable UUID id) {
+        requestService.updateRequest(currentUser, request, id);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/cars/{carId}/requests/{id}")
     public void deleteRequest(@PathVariable UUID id) {
         requestService.deleteRequest(id);
-    }
-
-    public void createRental(Request request) {
-        Rental rental = new Rental(request.getId(),
-                request.getPickup_datetime(),
-                request.getDropoff_datetime(),
-                request.getPickup_location(),
-                request.getDropoff_location(),
-                RentalStatus.UPCOMING,
-                request.getCar()
-        );
-        rentalService.addRental(rental);
     }
 }
