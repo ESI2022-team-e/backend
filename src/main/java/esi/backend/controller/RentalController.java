@@ -16,15 +16,14 @@ import java.util.UUID;
 public class RentalController {
 
     private final RentalService rentalService;
-    private final CarService carService;
 
-    public RentalController(RentalService rentalService, CarService carService) {
+    public RentalController(RentalService rentalService) {
         this.rentalService = rentalService;
-        this.carService = carService;
     }
 
 
     @RequestMapping("/rentals")
+    @PreAuthorize("hasRole('MANAGER')")
     public List<Rental> getAllRentals() {
         return rentalService.getAllRentals();
     }
@@ -59,40 +58,14 @@ public class RentalController {
     @RequestMapping(method = RequestMethod.POST, value = "/cars/{carId}/rentals")
     @PreAuthorize("hasRole('MANAGER')")
     public void addRental(@RequestBody Rental rental, @PathVariable UUID carId) {
-        Optional<Car> car = carService.getCar(carId);
-        Rental newRental = new Rental();
-        // TODO: I guess request information has to be taken
-
-        if (car.isPresent())
-            newRental.setCar(car.get());
-        // TODO: not sure if all the other things should be added right-away as well
-
-        rentalService.addRental(newRental);
+        rentalService.addRental(rental, carId);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}/rentals/{rentalId}")
     @PreAuthorize("hasRole('MANAGER')")
     public void updateRental(@RequestBody Rental rental, @PathVariable UUID
             carId, @PathVariable UUID rentalId) {
-        Optional<Car> car = carService.getCar(carId);
-        Rental existingRental = rentalService.getRental(rentalId).get();
-
-        if (rental.getStatus() != null)
-            existingRental.setStatus(rental.getStatus());
-
-        if (rental.getCar() != null && car.isPresent())
-            existingRental.setCar(car.get());
-
-        if (rental.getDropoff_location() != null)
-            existingRental.setDropoff_location(rental.getDropoff_location());
-
-        if (rental.getDropoff_date() != null)
-            existingRental.setDropoff_date(rental.getDropoff_date());
-
-        if (rental.getDropoff_time() != null)
-            existingRental.setDropoff_time(rental.getDropoff_time());
-
-        rentalService.updateRental(existingRental);
+        rentalService.updateRental(rental, carId, rentalId);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/cars/{carId}/rentals/{rentalId}")
