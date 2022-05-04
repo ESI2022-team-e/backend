@@ -27,6 +27,10 @@ public class Car{
     @JsonIgnore
     private Set<Rental> rentals = new HashSet<>();
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "car", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Request> requests = new HashSet<>();
+
     public Car() {
     }
 
@@ -120,5 +124,13 @@ public class Car{
 
     public void setRentals(Set<Rental> rentals) {
         this.rentals = rentals;
+    }
+
+    public Set<Request> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(Set<Request> requests) {
+        this.requests = requests;
     }
 }

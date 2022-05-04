@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "rentals")
-public class Rental {
+@Table(name= "requests")
+public class Request {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,16 +17,16 @@ public class Rental {
     private LocalDateTime dropoff_datetime;
     private String pickup_location;
     private String dropoff_location;
-    private RentalStatus status;
-    @ManyToOne
+    private RequestStatus status;
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "car_id")
     @JsonIgnore
     private Car car;
+    // TODO add customer
 
-    public Rental() {
-    }
+    public Request() {}
 
-    public Rental(UUID id, LocalDateTime pickup_datetime, LocalDateTime dropoff_datetime, String pickup_location, String dropoff_location, RentalStatus status, Car car) {
+    public Request(UUID id, LocalDateTime pickup_datetime, LocalDateTime dropoff_datetime, String pickup_location, String dropoff_location, RequestStatus status, Car car) {
         this.id = id;
         this.pickup_datetime = pickup_datetime;
         this.dropoff_datetime = dropoff_datetime;
@@ -59,6 +59,7 @@ public class Rental {
     public void setDropoff_datetime(LocalDateTime dropoff_date) {
         this.dropoff_datetime = dropoff_date;
     }
+
     public String getPickup_location() {
         return pickup_location;
     }
@@ -75,11 +76,11 @@ public class Rental {
         this.dropoff_location = dropoff_location;
     }
 
-    public RentalStatus getStatus() {
+    public RequestStatus getStatus() {
         return status;
     }
 
-    public void setStatus(RentalStatus status) {
+    public void setStatus(RequestStatus status) {
         this.status = status;
     }
 

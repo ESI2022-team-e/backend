@@ -1,4 +1,4 @@
-TRUNCATE cars,roles,users,rentals CASCADE;
+TRUNCATE cars,roles,users,rentals,requests CASCADE;
 
 INSERT INTO cars (id,mark, model, nr_of_seats, transmission_type, fuel_type, daily_cost, year, licence_plate) VALUES
   ('a81bc81b-dead-4e5d-abff-90865d1e13b1','Ford','Focus 1.6 Aut',5,'Automatic','Petrol',71,2002,'123 ABC'),
