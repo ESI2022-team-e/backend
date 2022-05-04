@@ -58,13 +58,13 @@ public class RentalController {
     @RequestMapping(method = RequestMethod.POST, value = "/cars/{carId}/rentals")
     @PreAuthorize("hasRole('MANAGER')")
     public void addRental(@RequestBody Rental rental, @PathVariable UUID carId) {
-        rentalService.addRental(rental, carId);
+        rentalService.addRental(rental);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}/rentals/{rentalId}")
     @PreAuthorize("hasRole('MANAGER')")
     public void startRental(@PathVariable UUID carId, @PathVariable UUID rentalId) {
-        rentalService.startRental(carId, rentalId);
+        rentalService.startRental(rentalId);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}/rentals/{rentalId}")
