@@ -39,20 +39,10 @@ public class RentalService {
     }
     */
 
-    public void addRental(Rental rental, UUID carId) {
-        Optional<Car> car = carRepository.findById(carId);
-        Rental newRental = new Rental();
-
-        newRental.setPickup_location(rental.getPickup_location());
-        newRental.setPickup_datetime(rental.getPickup_datetime());
-        newRental.setDropoff_location(rental.getDropoff_location());
-        newRental.setDropoff_datetime(rental.getDropoff_datetime());
-        newRental.setStatus(RentalStatus.CURRENT);
-
-        if (car.isPresent())
-            newRental.setCar(car.get());
-
-        rentalRepository.save(newRental);
+    public void startRental(UUID carId, UUID rentalId) {
+        Rental existingRental = rentalRepository.findById(rentalId).get();
+        existingRental.setStatus(RentalStatus.CURRENT);
+        rentalRepository.save(existingRental);
     }
 
     public void updateRental(Rental rental, UUID carId, UUID rentalId) {
