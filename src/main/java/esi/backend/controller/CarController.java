@@ -39,17 +39,7 @@ public class CarController {
     @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}")
     @PreAuthorize("hasRole('MANAGER')")
     public void updateCar(@RequestBody Car car, @PathVariable UUID carId) {
-        Optional<Car> carInService = carService.getCar(carId);
-
-        if (carInService.isPresent())
-            if (car.getDaily_cost() >= 0) {
-                carInService.get().setDaily_cost(car.getDaily_cost());
-            }
-            if (car.getLicence_plate() != null) {
-                carInService.get().setLicence_plate(car.getLicence_plate());
-            }
-
-        carService.updateCar(carInService.get());
+        carService.updateCar(car, carId);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/cars/{carId}")
