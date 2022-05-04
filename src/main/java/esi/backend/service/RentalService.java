@@ -43,12 +43,6 @@ public class RentalService {
         rentalRepository.save(rental);
     }
 
-    public void startRental(UUID rentalId) {
-        Rental existingRental = rentalRepository.findById(rentalId).get();
-        existingRental.setStatus(RentalStatus.CURRENT);
-        rentalRepository.save(existingRental);
-    }
-
     public void updateRental(Rental rental, UUID carId, UUID rentalId) {
         Optional<Car> car = carRepository.findById(carId);
         Rental existingRental = rentalRepository.findById(rentalId).get();

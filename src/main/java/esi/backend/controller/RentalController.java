@@ -63,12 +63,6 @@ public class RentalController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}/rentals/{rentalId}")
     @PreAuthorize("hasRole('MANAGER')")
-    public void startRental(@PathVariable UUID carId, @PathVariable UUID rentalId) {
-        rentalService.startRental(rentalId);
-    }
-
-    @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}/rentals/{rentalId}")
-    @PreAuthorize("hasRole('MANAGER')")
     public void updateRental(@RequestBody Rental rental, @PathVariable UUID
             carId, @PathVariable UUID rentalId) {
         rentalService.updateRental(rental, carId, rentalId);
