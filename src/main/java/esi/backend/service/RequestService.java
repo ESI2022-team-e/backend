@@ -5,6 +5,7 @@ import esi.backend.model.*;
 import esi.backend.repository.RentalRepository;
 import esi.backend.repository.RequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +57,7 @@ public class RequestService {
             if (request.getStatus().equals(RequestStatus.CANCELLED) || request.getStatus().equals(RequestStatus.REJECTED) || request.getStatus().equals(RequestStatus.PENDING)) {
                 req.setStatus(request.getStatus());
             }
-            if (request.getStatus().equals(RequestStatus.ACCEPTED) && user.getAuthorities().contains(ERole.ROLE_MANAGER)) {
+            if (request.getStatus().equals(RequestStatus.ACCEPTED) && user.getAuthorities().contains(new SimpleGrantedAuthority(ERole.ROLE_MANAGER.name()))) {
                 req.setStatus(request.getStatus());
                 createRental(req);
             }
