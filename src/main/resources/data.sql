@@ -8,5 +8,5 @@ INSERT INTO roles(id,name) VALUES
                                (1,'ROLE_CUSTOMER'),
                                (2,'ROLE_MANAGER');
 
-INSERT INTO rentals (id, pickup_datetime, dropoff_datetime, pickup_location, dropoff_location, status, car_id) VALUES
-    ('a81bc81b-dead-6e5d-ad75-90865d1e13b1','2022-01-10T17:09:42.411','2022-01-10T17:09:42.411','Lõunakeskus','Kesklinn', 1, 'a81bc81b-dead-4e5d-abff-90865d1e13b1');
+--INSERT INTO rentals (id, pickup_datetime, dropoff_datetime, pickup_location, dropoff_location, status, car_id) VALUES
+--    ('a81bc81b-dead-6e5d-ad75-90865d1e13b1','2022-01-10T17:09:42.411','2022-01-10T17:09:42.411','Lõunakeskus','Kesklinn', 1, 'a81bc81b-dead-4e5d-abff-90865d1e13b1');
