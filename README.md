@@ -1,5 +1,7 @@
 # ESI2022 Team E backend
 
+![example branch parameter](https://github.com/ESI2022-team-e/backend/actions/workflows/build.yml/badge.svg?branch=main)
+
 The source code of Enterprise System Integration 2022 spring project of Team E:
 
 * Lana Botchorishvili
