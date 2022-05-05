@@ -82,12 +82,10 @@ public class RequestController {
         if (request.getStatus() != null) {
             if (request.getStatus().equals(RequestStatus.CANCELLED) || request.getStatus().equals(RequestStatus.REJECTED) || request.getStatus().equals(RequestStatus.PENDING)) {
                 req.setStatus(request.getStatus());
-                System.out.println("Request status is not ACCEPTED");
             }
             if (request.getStatus().equals(RequestStatus.ACCEPTED) && currentUser.getAuthorities().contains(new SimpleGrantedAuthority(ERole.ROLE_MANAGER.name()))) {
                 req.setStatus(request.getStatus());
                 createRental(req);
-                System.out.println("Request status is ACCEPTED");
             }
         }
         requestService.updateRequest(req);
