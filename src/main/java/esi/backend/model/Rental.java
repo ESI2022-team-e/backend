@@ -13,15 +13,26 @@ public class Rental {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+
     private LocalDateTime pickup_datetime;
+
     private LocalDateTime dropoff_datetime;
+
     private String pickup_location;
+
     private String dropoff_location;
+
     private RentalStatus status;
+
     @ManyToOne
     @JoinColumn(name = "car_id")
     @JsonIgnore
     private Car car;
+
+    // TODO: customer
+
+    @OneToOne(mappedBy = "rental")
+    private Invoice invoice;
 
     public Rental() {
     }
@@ -59,6 +70,7 @@ public class Rental {
     public void setDropoff_datetime(LocalDateTime dropoff_date) {
         this.dropoff_datetime = dropoff_date;
     }
+
     public String getPickup_location() {
         return pickup_location;
     }
