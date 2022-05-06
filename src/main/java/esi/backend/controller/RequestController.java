@@ -5,6 +5,7 @@ import esi.backend.model.*;
 import esi.backend.repository.CustomerRepository;
 import esi.backend.security.service.UserDetailsImpl;
 import esi.backend.service.CarService;
+import esi.backend.service.CustomerService;
 import esi.backend.service.RentalService;
 import esi.backend.service.RequestService;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +28,13 @@ public class RequestController {
     private final RequestService requestService;
     private final CarService carService;
     private final RentalService rentalService;
-    private final CustomerRepository customerRepository;
+    private final CustomerService customerService;
 
-    public RequestController(RequestService requestService, CarService carService, RentalService rentalService, CustomerRepository customerRepository) {
+    public RequestController(RequestService requestService, CarService carService, RentalService rentalService, CustomerService customerService) {
         this.requestService = requestService;
         this.carService = carService;
         this.rentalService = rentalService;
-        this.customerRepository = customerRepository;
+        this.customerService = customerService;
     }
 
     @RequestMapping("requests")
@@ -64,7 +65,7 @@ public class RequestController {
         if (optionalCar.isPresent()) {
             request.setCar(optionalCar.get());
         } else throw new ResourceNotFoundException("Car with id" + carId + "not found");
-        Optional<Customer> optionalCustomer = customerRepository.findById(currentUser.getId());
+        Optional<Customer> optionalCustomer = customerService.getCustomer(currentUser.getId());
         optionalCustomer.ifPresent(request::setCustomer);
         requestService.addRequest(request);
         return ResponseEntity.ok("Request created successfully!");
@@ -107,20 +108,20 @@ public class RequestController {
     }
 
     @GetMapping("/customers/{customerId}/requests")
-    @PreAuthorize("hasRole('CUSTOMER')")
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('MANAGER')")
     public ResponseEntity<List<Request>> getCustomerRequests(
             @AuthenticationPrincipal final UserDetailsImpl currentUser,
             @PathVariable Long customerId) {
-        return requestService.getAllRequestsByCustomerId(currentUser, customerId);
+        return customerService.getAllRequestsByCustomerId(currentUser, customerId);
     }
 
     @GetMapping("/customers/{customerId}/requests/{requestId}")
-    @PreAuthorize("hasRole('CUSTOMER')")
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('MANAGER')")
     public ResponseEntity<Request> getCustomerRequest(
             @AuthenticationPrincipal final UserDetailsImpl currentUser,
             @PathVariable long customerId,
             @PathVariable UUID requestId) {
-        return requestService.getRequestByCustomerId(currentUser, customerId, requestId);
+        return customerService.getRequestByCustomerId(currentUser, customerId, requestId);
     }
 
     public void createRental(Request request) {
