@@ -2,6 +2,7 @@ package esi.backend.service;
 
 import esi.backend.exception.ResourceNotFoundException;
 import esi.backend.model.*;
+import esi.backend.repository.CarRepository;
 import esi.backend.repository.RentalRepository;
 import esi.backend.repository.RequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class RequestService {
     private RequestRepository requestRepository;
     @Autowired
     private RentalRepository rentalRepository;
+    @Autowired
+    private CarRepository carRepository;
 
     public List<Request> getAllRequests() {
         List<Request> requests = new ArrayList<>();
@@ -36,7 +39,11 @@ public class RequestService {
         return requestRepository.findById(id);
     }
 
-    public void addRequest(Request request) {
+    public void addRequest(Request request, UUID carId) {
+        Optional<Car> optionalCar = carRepository.findById(carId);
+        if (optionalCar.isPresent()) {
+            request.setCar(optionalCar.get());
+        } else throw new ResourceNotFoundException("Car with id" + carId + "not found");
         requestRepository.save(request);
     }
 

@@ -46,11 +46,7 @@ public class RequestController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/cars/{carId}/requests")
     public void addRequest(@RequestBody Request request, @PathVariable UUID carId) {
-        Optional<Car> optionalCar = carService.getCar(carId);
-        if (optionalCar.isPresent()) {
-            request.setCar(optionalCar.get());
-        } else throw new ResourceNotFoundException("Car with id" + carId + "not found");
-        requestService.addRequest(request);
+        requestService.addRequest(request, carId);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}/requests/{id}")
