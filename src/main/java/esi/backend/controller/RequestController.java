@@ -1,9 +1,6 @@
 package esi.backend.controller;
 
 import esi.backend.model.Request;
-import esi.backend.repository.CustomerRepository;
-import esi.backend.service.CarService;
-import esi.backend.service.RentalService;
 import esi.backend.service.RequestService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,20 +17,14 @@ import java.util.UUID;
 public class RequestController {
 
     private final RequestService requestService;
-    private final CarService carService;
-    private final RentalService rentalService;
-    private final CustomerRepository customerRepository;
 
-    public RequestController(RequestService requestService, CarService carService, RentalService rentalService, CustomerRepository customerRepository) {
+    public RequestController(RequestService requestService) {
         this.requestService = requestService;
-        this.carService = carService;
-        this.rentalService = rentalService;
-        this.customerRepository = customerRepository;
     }
 
     @RequestMapping("requests")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<Object> getAllRequests() {
+    public ResponseEntity<List<Request>> getAllRequests() {
         return requestService.getAllRequests();
     }
 

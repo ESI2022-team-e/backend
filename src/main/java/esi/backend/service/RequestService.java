@@ -30,7 +30,7 @@ public class RequestService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    public ResponseEntity<Object> getAllRequests() {
+    public ResponseEntity<List<Request>> getAllRequests() {
         return new ResponseEntity<>(requestRepository.findAll(), HttpStatus.OK);
     }
 
