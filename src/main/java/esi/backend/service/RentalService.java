@@ -25,7 +25,7 @@ public class RentalService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    public List<Rental> getAllRentals(){
+    public List<Rental> getAllRentals() {
         return (List<Rental>) rentalRepository.findAll();
     }
 

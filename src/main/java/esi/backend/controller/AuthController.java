@@ -119,7 +119,7 @@ public class AuthController {
 
         String userType;
         // Create new user's account
-        if (!roles.contains((roleRepository.findByName(ERole.ROLE_MANAGER)).get())){
+        if (!roles.contains((roleRepository.findByName(ERole.ROLE_MANAGER)).get())) {
             Customer customer = new Customer();
             customer.setEmail(signUpRequest.getEmail());
             customer.setPassword(encoder.encode(signUpRequest.getPassword()));
@@ -127,16 +127,16 @@ public class AuthController {
             customer.setRoles(roles);
             customerRepository.save(customer);
             userType = "Customer";
-        } else{
+        } else {
             User user = new User(signUpRequest.getUsername(),
                     signUpRequest.getEmail(),
                     encoder.encode(signUpRequest.getPassword()));
             user.setRoles(roles);
             userRepository.save(user);
-            userType="Manager";
+            userType = "Manager";
         }
 
-        return ResponseEntity.ok(new MessageResponse(userType +" registered successfully!"));
+        return ResponseEntity.ok(new MessageResponse(userType + " registered successfully!"));
     }
 }
 
