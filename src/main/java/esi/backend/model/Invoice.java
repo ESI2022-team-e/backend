@@ -1,5 +1,7 @@
 package esi.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -20,17 +22,20 @@ public class Invoice {
     @JoinColumn(name = "rental_id", referencedColumnName = "id")
     private Rental rental;
 
-    // TODO: customer ?
-
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "customer_id")
+    @JsonIgnore
+    private Customer customer;
 
     public Invoice() {
     }
 
-    public Invoice(UUID id, LocalDateTime date, InvoiceStatus status, Rental rental) {
+    public Invoice(UUID id, LocalDateTime date, InvoiceStatus status, Rental rental, Customer customer) {
         this.id = id;
         this.date = date;
         this.status = status;
         this.rental = rental;
+        this.customer = customer;
     }
 
     public UUID getId() {
@@ -63,5 +68,13 @@ public class Invoice {
 
     public void setRental(Rental rental) {
         this.rental = rental;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }

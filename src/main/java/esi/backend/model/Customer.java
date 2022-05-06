@@ -17,6 +17,10 @@ public class Customer extends User {
     @JsonIgnore
     private Set<Request> requests = new HashSet<>();
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Invoice> invoices = new HashSet<>();
+
 
     public Set<Rental> getRentals() {
         return rentals;
@@ -32,5 +36,13 @@ public class Customer extends User {
 
     public void setRequests(Set<Request> requests) {
         this.requests = requests;
+    }
+
+    public Set<Invoice> getInvoices() {
+        return invoices;
+    }
+
+    public void setInvoices(Set<Invoice> invoices) {
+        this.invoices = invoices;
     }
 }
