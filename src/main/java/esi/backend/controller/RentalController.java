@@ -1,11 +1,10 @@
 package esi.backend.controller;
 
-import esi.backend.model.Car;
 import esi.backend.model.Rental;
-import esi.backend.service.CarService;
 import esi.backend.service.RentalService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

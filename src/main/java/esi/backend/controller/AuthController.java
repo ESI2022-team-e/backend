@@ -1,5 +1,18 @@
 package esi.backend.controller;
 
+import esi.backend.model.Customer;
+import esi.backend.model.ERole;
+import esi.backend.model.Role;
+import esi.backend.model.User;
+import esi.backend.payload.request.LoginRequest;
+import esi.backend.payload.request.SignupRequest;
+import esi.backend.payload.response.JwtResponse;
+import esi.backend.payload.response.MessageResponse;
+import esi.backend.repository.CustomerRepository;
+import esi.backend.repository.RoleRepository;
+import esi.backend.repository.UserRepository;
+import esi.backend.security.jwt.JwtUtils;
+import esi.backend.security.service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -8,23 +21,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import esi.backend.model.ERole;
-import esi.backend.model.Role;
-import esi.backend.model.User;
-import esi.backend.payload.request.LoginRequest;
-import esi.backend.payload.request.SignupRequest;
-import esi.backend.payload.response.JwtResponse;
-import esi.backend.payload.response.MessageResponse;
-import esi.backend.repository.RoleRepository;
-import esi.backend.repository.UserRepository;
-import esi.backend.security.jwt.JwtUtils;
-import esi.backend.security.service.UserDetailsImpl;
 
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -35,6 +38,9 @@ public class AuthController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    CustomerRepository customerRepository;
 
     @Autowired
     RoleRepository roleRepository;
@@ -80,11 +86,6 @@ public class AuthController {
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
 
-        // Create new user's account
-        User user = new User(signUpRequest.getUsername(),
-                signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()));
-
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
@@ -116,10 +117,26 @@ public class AuthController {
             });
         }
 
-        user.setRoles(roles);
-        userRepository.save(user);
+        String userType;
+        // Create new user's account
+        if (!roles.contains((roleRepository.findByName(ERole.ROLE_MANAGER)).get())) {
+            Customer customer = new Customer();
+            customer.setEmail(signUpRequest.getEmail());
+            customer.setPassword(encoder.encode(signUpRequest.getPassword()));
+            customer.setUsername(signUpRequest.getUsername());
+            customer.setRoles(roles);
+            customerRepository.save(customer);
+            userType = "Customer";
+        } else {
+            User user = new User(signUpRequest.getUsername(),
+                    signUpRequest.getEmail(),
+                    encoder.encode(signUpRequest.getPassword()));
+            user.setRoles(roles);
+            userRepository.save(user);
+            userType = "Manager";
+        }
 
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+        return ResponseEntity.ok(new MessageResponse(userType + " registered successfully!"));
     }
 }
 

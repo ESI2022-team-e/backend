@@ -1,5 +1,8 @@
 package esi.backend.security;
 
+import esi.backend.security.jwt.AuthEntryPointJwt;
+import esi.backend.security.jwt.AuthTokenFilter;
+import esi.backend.security.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,9 +16,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import esi.backend.security.jwt.AuthEntryPointJwt;
-import esi.backend.security.jwt.AuthTokenFilter;
-import esi.backend.security.service.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -59,6 +59,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/cars/**").permitAll()
                 .antMatchers("/api/rentals/**").permitAll()
+                .antMatchers("/api/requests/**").permitAll()
+                .antMatchers("/api/customers/**").permitAll()
                 .antMatchers("/api/test/**").permitAll()
                 .anyRequest().authenticated();
 

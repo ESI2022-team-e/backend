@@ -2,8 +2,8 @@ package esi.backend.service;
 
 import esi.backend.model.Car;
 import esi.backend.model.Rental;
-import esi.backend.model.RentalStatus;
 import esi.backend.repository.CarRepository;
+import esi.backend.repository.CustomerRepository;
 import esi.backend.repository.RentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,10 @@ public class RentalService {
     @Autowired
     private CarRepository carRepository;
 
-    public List<Rental> getAllRentals(){
+    @Autowired
+    private CustomerRepository customerRepository;
+
+    public List<Rental> getAllRentals() {
         return (List<Rental>) rentalRepository.findAll();
     }
 
@@ -34,7 +37,7 @@ public class RentalService {
     }
 
     /*
-    public List<Rental> getAllCustomerRentals(Integer customerId) {
+    public List<Rental> getAllCustomerRentals(long customerId) {
         return rentalRepository.findByCustomerId(customerId);
     }
     */
