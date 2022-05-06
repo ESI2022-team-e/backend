@@ -1,11 +1,15 @@
 package esi.backend.service;
 
-import esi.backend.exception.ResourceNotFoundException;
+import esi.backend.model.Customer;
 import esi.backend.model.Invoice;
 import esi.backend.model.Rental;
+import esi.backend.repository.CustomerRepository;
 import esi.backend.repository.InvoiceRepository;
 import esi.backend.repository.RentalRepository;
+import esi.backend.security.service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,50 +24,75 @@ public class InvoiceService {
     @Autowired
     private RentalRepository rentalRepository;
 
+    @Autowired
+    private CustomerRepository customerRepository;
 
-    public Invoice getInvoice(UUID id) {
-        return invoiceRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Invoice with id " + id + " not found."));
+
+    public ResponseEntity<Invoice> getInvoice(UUID id) {
+        Invoice invoice = invoiceRepository.findById(id).orElse(null);
+        return (invoice == null)
+                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(invoice, HttpStatus.OK);
     }
 
-    public List<Invoice> getAllInvoices() {
-        return (List<Invoice>) invoiceRepository.findAll();
+    public ResponseEntity<List<Invoice>> getAllInvoices() {
+        return new ResponseEntity<>(invoiceRepository.findAll(), HttpStatus.OK);
     }
 
-    public Invoice getInvoiceByRentalId(UUID rentalId) {
-        // TODO: add check that the one asking has either:
-        //  * ROLE: MANAGER
-        //  * ROLE: CUSTOMER + the same id as the customerId in api
-        return invoiceRepository.findByRentalId(rentalId)
-                .orElseThrow(() -> new ResourceNotFoundException("Rental with id " + rentalId + " not found."));
+    public ResponseEntity<Invoice> getInvoiceByRentalId(UserDetailsImpl currentUser, UUID rentalId) {
+        Invoice invoice = invoiceRepository.findByRentalId(rentalId).orElse(null);
+        if (invoice == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (!currentUser.getId().equals(invoice.getCustomer().getId()))
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        // TODO: should any ROLE_MANAGER also be able to access this api?
+        return new ResponseEntity<>(invoice, HttpStatus.OK);
     }
 
-    public List<Invoice> getAllInvoicesByCustomer(UUID customerId) {
-        // TODO: add check that the one asking has either:
-        //  * ROLE: MANAGER
-        //  * ROLE: CUSTOMER + the same id as the customerId in api
-        return invoiceRepository.findByCustomerId(customerId);
+    public ResponseEntity<List<Invoice>> getAllInvoicesByCustomerId(UserDetailsImpl currentUser, long customerId) {
+        Customer customer = customerRepository.findById(customerId).orElse(null);
+        if (customer == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (!currentUser.getId().equals(customer.getId()))
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        // TODO: should any ROLE_MANAGER also be able to access this api?
+        return new ResponseEntity<>(invoiceRepository.findByCustomerId(customerId), HttpStatus.OK);
     }
 
     public void addInvoice(Invoice invoice, UUID rentalId) {
-        Rental rental = rentalRepository.findById(rentalId)
-                .orElseThrow(() -> new ResourceNotFoundException("Rental with id " + rentalId + " not found."));
+        Rental rental = rentalRepository.findById(rentalId).orElse(null);
+        if (rental == null) {
+            new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return;
+        }
         // only allow one invoice per rental
         boolean invoiceExisting = invoiceRepository.findByRentalId(rentalId).isPresent();
-        if (!invoiceExisting) {
-            invoice.setRental(rental);
-            invoiceRepository.save(invoice);
+        if (invoiceExisting) {
+            new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return;
         }
+        invoice.setRental(rental);
+        invoice.setCustomer(rental.getCustomer());
+        invoiceRepository.save(invoice);
+        new ResponseEntity<>(HttpStatus.OK);
+
     }
 
-    public void updateInvoice(UUID invoiceId, Invoice newInvoice) {
-        Invoice invoice = invoiceRepository.findById(invoiceId).
-                orElseThrow(() -> new ResourceNotFoundException("Invoice with id " + invoiceId + " not found."));
-        // TODO: check if currentUser.id == customerId
-        // TODO: ? does this happen automatically or does it have to be explicitly checked
+    public void updateInvoice(UserDetailsImpl currentUser, UUID invoiceId, Invoice newInvoice) {
+        Invoice invoice = invoiceRepository.findById(invoiceId).orElse(null);
+        if (invoice == null) {
+            new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return;
+        }
+        if (!currentUser.getId().equals(invoice.getCustomer().getId())) {
+            new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return;
+        }
+        // TODO: should manager be able to change the invoice status as well? - I propose no.
         // only allow changing the status of the invoice
         invoice.setStatus(newInvoice.getStatus());
         invoiceRepository.save(invoice);
+        new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

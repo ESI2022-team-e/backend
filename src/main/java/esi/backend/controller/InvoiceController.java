@@ -1,10 +1,11 @@
 package esi.backend.controller;
 
 import esi.backend.model.Invoice;
+import esi.backend.security.service.UserDetailsImpl;
 import esi.backend.service.InvoiceService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,24 +24,24 @@ public class InvoiceController {
 
     @RequestMapping("invoices/{invoiceId}")
     @PreAuthorize("hasRole('MANAGER')")
-    public Invoice getInvoice(@AuthenticationPrincipal final UserDetails currentUser, @PathVariable UUID invoiceId) {
+    public ResponseEntity<Invoice> getInvoice(@PathVariable UUID invoiceId) {
         return invoiceService.getInvoice(invoiceId);
-    }
-
-    @RequestMapping("customers/{customerId}/rentals/{rentalId}/invoices/{invoiceId}")
-    public Invoice getInvoiceByRentalId(@AuthenticationPrincipal final UserDetails currentUser, @PathVariable UUID rentalId) {
-        return invoiceService.getInvoiceByRentalId(rentalId);
-    }
-
-    @RequestMapping("customers/{customerId}/invoices")
-    public List<Invoice> getAllInvoicesByCustomerId(@PathVariable UUID customerId) {
-        return invoiceService.getAllInvoicesByCustomer(customerId);
     }
 
     @RequestMapping("invoices")
     @PreAuthorize("hasRole('MANAGER')")
-    public List<Invoice> getAllInvoices() {
+    public ResponseEntity<List<Invoice>> getAllInvoices() {
         return invoiceService.getAllInvoices();
+    }
+
+    @RequestMapping("customers/{customerId}/rentals/{rentalId}/invoices/{invoiceId}")
+    public ResponseEntity<Invoice> getInvoiceByRentalId(@AuthenticationPrincipal final UserDetailsImpl currentUser, @PathVariable UUID rentalId) {
+        return invoiceService.getInvoiceByRentalId(currentUser, rentalId);
+    }
+
+    @RequestMapping("customers/{customerId}/invoices")
+    public ResponseEntity<List<Invoice>> getAllInvoicesByCustomerId(@AuthenticationPrincipal final UserDetailsImpl currentUser, @PathVariable long customerId) {
+        return invoiceService.getAllInvoicesByCustomerId(currentUser, customerId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/cars/{carId}/rentals/{rentalId}/invoices")
@@ -50,8 +51,8 @@ public class InvoiceController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/customers/{customerId}/rentals/{rentalId}/invoices/{invoiceId}")
-    public void updateInvoice(@AuthenticationPrincipal final UserDetails currentUser, @PathVariable UUID invoiceId, @RequestBody Invoice invoice) {
-        invoiceService.updateInvoice(invoiceId, invoice);
+    public void updateInvoice(@AuthenticationPrincipal final UserDetailsImpl currentUser, @PathVariable UUID invoiceId, @RequestBody Invoice invoice) {
+        invoiceService.updateInvoice(currentUser, invoiceId, invoice);
     }
 
 }

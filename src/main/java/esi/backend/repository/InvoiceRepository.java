@@ -11,6 +11,8 @@ public interface InvoiceRepository extends CrudRepository<Invoice, UUID> {
 
     Optional<Invoice> findByRentalId(UUID rentalId);
 
-    List<Invoice> findByCustomerId(UUID customerId);
+    List<Invoice> findByCustomerId(long customerId);
+
+    List<Invoice> findAll();
 
 }
