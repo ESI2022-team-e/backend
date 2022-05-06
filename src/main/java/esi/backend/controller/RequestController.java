@@ -3,7 +3,6 @@ package esi.backend.controller;
 import esi.backend.exception.ResourceNotFoundException;
 import esi.backend.model.*;
 import esi.backend.service.CarService;
-import esi.backend.service.RentalService;
 import esi.backend.service.RequestService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,12 +20,10 @@ public class RequestController {
 
     private final RequestService requestService;
     private final CarService carService;
-    private final RentalService rentalService;
 
-    public RequestController(RequestService requestService, CarService carService, RentalService rentalService) {
+    public RequestController(RequestService requestService, CarService carService) {
         this.requestService = requestService;
         this.carService = carService;
-        this.rentalService = rentalService;
     }
 
     @RequestMapping("requests")
