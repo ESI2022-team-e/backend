@@ -13,7 +13,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -28,7 +27,7 @@ public class RequestController {
     private final RentalService rentalService;
     private final CustomerRepository customerRepository;
 
-    public RequestController(RequestService requestService, CarService carService, RentalService rentalService,CustomerRepository customerRepository) {
+    public RequestController(RequestService requestService, CarService carService, RentalService rentalService, CustomerRepository customerRepository) {
         this.requestService = requestService;
         this.carService = carService;
         this.rentalService = rentalService;
@@ -100,8 +99,8 @@ public class RequestController {
 
     @GetMapping("/customers/{customerId}/requests")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<List<Request>> getCustomerRequests(@AuthenticationPrincipal final UserDetails currentUser, @PathVariable Long customerId){
-        return requestService.getAllRequestsByCustomerId(currentUser,customerId);
+    public ResponseEntity<List<Request>> getCustomerRequests(@AuthenticationPrincipal final UserDetails currentUser, @PathVariable Long customerId) {
+        return requestService.getAllRequestsByCustomerId(currentUser, customerId);
     }
 
     public void createRental(Request request) {
