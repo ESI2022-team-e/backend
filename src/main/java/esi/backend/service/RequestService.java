@@ -1,17 +1,14 @@
 package esi.backend.service;
 
-import esi.backend.model.Customer;
-import esi.backend.model.Request;
-import esi.backend.repository.CustomerRepository;
 import esi.backend.exception.ResourceNotFoundException;
 import esi.backend.model.*;
 import esi.backend.repository.CarRepository;
+import esi.backend.repository.CustomerRepository;
 import esi.backend.repository.RentalRepository;
 import esi.backend.repository.RequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -33,32 +30,35 @@ public class RequestService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    public List<Request> getAllRequests() {
-        List<Request> requests = new ArrayList<>();
-        requestRepository.findAll().forEach(requests::add);
-        return requests;
+    public ResponseEntity<Object> getAllRequests() {
+        return new ResponseEntity<>(requestRepository.findAll(), HttpStatus.OK);
     }
 
-    public List<Request> getAllRequestsByCarId(UUID carId) {
-        return requestRepository.findByCarId(carId);
+    public ResponseEntity<List<Request>> getAllRequestsByCarId(UUID carId) {
+        Car car = carRepository.findById(carId).orElse(null);
+        if (car == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(requestRepository.findByCarId(carId), HttpStatus.OK);
     }
 
-    public Optional<Request> getRequest(UUID id) {
-        return requestRepository.findById(id);
+    public ResponseEntity<Request> getRequest(UUID id) {
+        Request request = requestRepository.findById(id).orElse(null);
+        return (request == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : new ResponseEntity<>(request, HttpStatus.OK);
     }
 
-    public void addRequest(Request request, UUID carId) {
+    public void addRequest(UserDetails currentUser, Request request, UUID carId) {
         Optional<Car> optionalCar = carRepository.findById(carId);
         if (optionalCar.isPresent()) {
             request.setCar(optionalCar.get());
         } else throw new ResourceNotFoundException("Car with id" + carId + "not found");
+        Optional<Customer> optionalCustomer = customerRepository.findByUsername(currentUser.getUsername());
+        optionalCustomer.ifPresent(request::setCustomer);
         requestRepository.save(request);
     }
 
     public void updateRequest(UserDetails user, Request request, UUID id) {
         Request req = requestRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Request with id " + id + " not found"));
-
         if (request.getPickup_datetime() != null) {
             req.setPickup_datetime(request.getPickup_datetime());
         }
@@ -98,15 +98,7 @@ public class RequestService {
     }
 
     public void createRental(Request request) {
-        Rental rental = new Rental(request.getId(),
-                request.getPickup_datetime(),
-                request.getDropoff_datetime(),
-                request.getPickup_location(),
-                request.getDropoff_location(),
-                RentalStatus.UPCOMING,
-                request.getCar(),
-                request.getCustomer()
-        );
+        Rental rental = new Rental(request.getId(), request.getPickup_datetime(), request.getDropoff_datetime(), request.getPickup_location(), request.getDropoff_location(), RentalStatus.UPCOMING, request.getCar(), request.getCustomer());
         rentalRepository.save(rental);
     }
 }
