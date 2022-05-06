@@ -98,6 +98,12 @@ public class RequestController {
         return ResponseEntity.ok("Request deleted successfully!");
     }
 
+    @GetMapping("/customers/{customerId}/requests")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<List<Request>> getCustomerRequests(@AuthenticationPrincipal final UserDetails currentUser, @PathVariable Long customerId){
+        return requestService.getAllRequestsByCustomerId(currentUser,customerId);
+    }
+
     public void createRental(Request request) {
         Rental rental = new Rental(request.getId(),
                 request.getPickup_datetime(),

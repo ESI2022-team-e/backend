@@ -1,9 +1,16 @@
 package esi.backend.service;
 
+import esi.backend.exception.ResourceNotFoundException;
 import esi.backend.model.Car;
+import esi.backend.model.Customer;
 import esi.backend.model.Request;
+import esi.backend.repository.CustomerRepository;
 import esi.backend.repository.RequestRepository;
+import esi.backend.security.service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,6 +23,9 @@ public class RequestService {
 
     @Autowired
     private RequestRepository requestRepository;
+
+    @Autowired
+    private CustomerRepository customerRepository;
 
     public List<Request> getAllRequests() {
         List<Request> requests = new ArrayList<>();
@@ -41,5 +51,20 @@ public class RequestService {
 
     public void deleteRequest(UUID id) {
         requestRepository.deleteById(id);
+    }
+
+    public ResponseEntity<List<Request>> getAllRequestsByCustomerId(UserDetails currentUser, long customerId){
+        Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
+        if (optionalCustomer.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            //throw new ResourceNotFoundException("Customer with id" + customerId + "not found");
+        }
+        Customer customer = optionalCustomer.get();
+        if (!currentUser.getUsername().equals(customer.getUsername())){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        List<Request> requests = new ArrayList<>();
+        requestRepository.findAll().forEach(requests::add);
+        return new ResponseEntity<>(requests,HttpStatus.OK);
     }
 }
