@@ -30,7 +30,6 @@ public class RequestService {
     private RentalRepository rentalRepository;
     @Autowired
     private CarRepository carRepository;
-
     @Autowired
     private CustomerRepository customerRepository;
 
@@ -105,7 +104,8 @@ public class RequestService {
                 request.getPickup_location(),
                 request.getDropoff_location(),
                 RentalStatus.UPCOMING,
-                request.getCar()
+                request.getCar(),
+                request.getCustomer()
         );
         rentalRepository.save(rental);
     }
