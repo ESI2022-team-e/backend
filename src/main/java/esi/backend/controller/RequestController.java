@@ -28,7 +28,7 @@ public class RequestController {
     private final RentalService rentalService;
     private final CustomerRepository customerRepository;
 
-    public RequestController(RequestService requestService, CarService carService, RentalService rentalService,CustomerRepository customerRepository) {
+    public RequestController(RequestService requestService, CarService carService, RentalService rentalService, CustomerRepository customerRepository) {
         this.requestService = requestService;
         this.carService = carService;
         this.rentalService = rentalService;
@@ -100,8 +100,17 @@ public class RequestController {
 
     @GetMapping("/customers/{customerId}/requests")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<List<Request>> getCustomerRequests(@AuthenticationPrincipal final UserDetails currentUser, @PathVariable Long customerId){
-        return requestService.getAllRequestsByCustomerId(currentUser,customerId);
+    public ResponseEntity<List<Request>> getCustomerRequests(@AuthenticationPrincipal final UserDetails currentUser, @PathVariable Long customerId) {
+        return requestService.getAllRequestsByCustomerId(currentUser, customerId);
+    }
+
+    @GetMapping("/customers/{customerId}/requests/{requestId}")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<Request> getCustomerRequest(
+            @AuthenticationPrincipal final UserDetails currentUser,
+            @PathVariable long customerId,
+            @PathVariable UUID requestId) {
+        return requestService.getRequestByCustomerId(currentUser, customerId, requestId);
     }
 
     public void createRental(Request request) {
