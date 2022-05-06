@@ -42,7 +42,7 @@ public class RequestService {
 
     public void updateRequest(UserDetails user, Request request, UUID id) {
         Request req = requestRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Request with id " + id + "not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Request with id " + id + " not found"));
 
         if (request.getPickup_datetime() != null) {
             req.setPickup_datetime(request.getPickup_datetime());
