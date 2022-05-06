@@ -1,6 +1,7 @@
 package esi.backend.security.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import esi.backend.model.ERole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -88,6 +89,14 @@ public class UserDetailsImpl implements UserDetails {
   @Override
   public boolean isEnabled() {
     return true;
+  }
+
+  public boolean isManager() {
+    return this.authorities.contains(new SimpleGrantedAuthority(ERole.ROLE_MANAGER.name()));
+  }
+
+  public boolean isCustomer(){
+    return this.authorities.contains(new SimpleGrantedAuthority(ERole.ROLE_CUSTOMER.name()));
   }
 
   @Override

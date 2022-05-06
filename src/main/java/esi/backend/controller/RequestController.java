@@ -3,6 +3,7 @@ package esi.backend.controller;
 import esi.backend.exception.ResourceNotFoundException;
 import esi.backend.model.*;
 import esi.backend.repository.CustomerRepository;
+import esi.backend.security.service.UserDetailsImpl;
 import esi.backend.service.CarService;
 import esi.backend.service.RentalService;
 import esi.backend.service.RequestService;
@@ -55,19 +56,26 @@ public class RequestController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/cars/{carId}/requests")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<?> addRequest(@AuthenticationPrincipal final UserDetails currentUser, @RequestBody Request request, @PathVariable UUID carId) {
+    public ResponseEntity<?> addRequest(
+            @AuthenticationPrincipal final UserDetailsImpl currentUser,
+            @RequestBody Request request,
+            @PathVariable UUID carId) {
         Optional<Car> optionalCar = carService.getCar(carId);
         if (optionalCar.isPresent()) {
             request.setCar(optionalCar.get());
         } else throw new ResourceNotFoundException("Car with id" + carId + "not found");
-        Optional<Customer> optionalCustomer = customerRepository.findByUsername(currentUser.getUsername());
+        Optional<Customer> optionalCustomer = customerRepository.findById(currentUser.getId());
         optionalCustomer.ifPresent(request::setCustomer);
         requestService.addRequest(request);
         return ResponseEntity.ok("Request created successfully!");
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}/requests/{id}")
-    public ResponseEntity<?> updateRequest(@AuthenticationPrincipal final UserDetails currentUser, @RequestBody Request request, @PathVariable UUID carId, @PathVariable UUID id) {
+    public ResponseEntity<?> updateRequest(
+            @AuthenticationPrincipal final UserDetailsImpl currentUser,
+            @RequestBody Request request,
+            @PathVariable UUID carId,
+            @PathVariable UUID id) {
         Request req = requestService.getRequest(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Request with id " + id + "not found"));
         if (request.getPickup_datetime() != null) {
@@ -83,7 +91,7 @@ public class RequestController {
             if (request.getStatus().equals(RequestStatus.CANCELLED) || request.getStatus().equals(RequestStatus.REJECTED) || request.getStatus().equals(RequestStatus.PENDING)) {
                 req.setStatus(request.getStatus());
             }
-            if (request.getStatus().equals(RequestStatus.ACCEPTED) && currentUser.getAuthorities().contains(new SimpleGrantedAuthority(ERole.ROLE_MANAGER.name()))) {
+            if (request.getStatus().equals(RequestStatus.ACCEPTED) && currentUser.isManager()) {
                 req.setStatus(request.getStatus());
                 createRental(req);
             }
@@ -100,14 +108,16 @@ public class RequestController {
 
     @GetMapping("/customers/{customerId}/requests")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<List<Request>> getCustomerRequests(@AuthenticationPrincipal final UserDetails currentUser, @PathVariable Long customerId) {
+    public ResponseEntity<List<Request>> getCustomerRequests(
+            @AuthenticationPrincipal final UserDetailsImpl currentUser,
+            @PathVariable Long customerId) {
         return requestService.getAllRequestsByCustomerId(currentUser, customerId);
     }
 
     @GetMapping("/customers/{customerId}/requests/{requestId}")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<Request> getCustomerRequest(
-            @AuthenticationPrincipal final UserDetails currentUser,
+            @AuthenticationPrincipal final UserDetailsImpl currentUser,
             @PathVariable long customerId,
             @PathVariable UUID requestId) {
         return requestService.getRequestByCustomerId(currentUser, customerId, requestId);
