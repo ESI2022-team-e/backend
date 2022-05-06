@@ -1,9 +1,12 @@
 package esi.backend.service;
 
 import esi.backend.model.Car;
+import esi.backend.model.Invoice;
+import esi.backend.model.InvoiceStatus;
 import esi.backend.model.Rental;
 import esi.backend.repository.CarRepository;
 import esi.backend.repository.CustomerRepository;
+import esi.backend.repository.InvoiceRepository;
 import esi.backend.repository.RentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,10 @@ public class RentalService {
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private InvoiceRepository invoiceRepository;
+
 
     public List<Rental> getAllRentals() {
         return (List<Rental>) rentalRepository.findAll();
@@ -44,6 +51,7 @@ public class RentalService {
 
     public void addRental(Rental rental) {
         rentalRepository.save(rental);
+        createInvoice(rental);
     }
 
     public void updateRental(Rental rental, UUID carId, UUID rentalId) {
@@ -73,6 +81,17 @@ public class RentalService {
 
     public void deleteRental(UUID id) {
         rentalRepository.deleteById(id);
+    }
+
+    public void createInvoice(Rental rental) {
+        Invoice invoice = new Invoice(
+                rental.getId(),
+                rental.getPickup_datetime(),
+                InvoiceStatus.UNPAID,
+                rental,
+                rental.getCustomer()
+        );
+        invoiceRepository.save(invoice);
     }
 
 }
