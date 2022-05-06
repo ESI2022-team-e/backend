@@ -1,5 +1,7 @@
 package esi.backend.controller;
 
+import esi.backend.model.Customer;
+import esi.backend.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
@@ -35,6 +38,9 @@ public class AuthController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    CustomerRepository customerRepository;
 
     @Autowired
     RoleRepository roleRepository;
@@ -80,11 +86,6 @@ public class AuthController {
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
 
-        // Create new user's account
-        User user = new User(signUpRequest.getUsername(),
-                signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()));
-
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
@@ -116,10 +117,26 @@ public class AuthController {
             });
         }
 
-        user.setRoles(roles);
-        userRepository.save(user);
+        String userType;
+        // Create new user's account
+        if (!roles.contains((roleRepository.findByName(ERole.ROLE_MANAGER)).get())){
+            Customer customer = new Customer();
+            customer.setEmail(signUpRequest.getEmail());
+            customer.setPassword(encoder.encode(signUpRequest.getPassword()));
+            customer.setUsername(signUpRequest.getUsername());
+            customer.setRoles(roles);
+            customerRepository.save(customer);
+            userType = "Customer";
+        } else{
+            User user = new User(signUpRequest.getUsername(),
+                    signUpRequest.getEmail(),
+                    encoder.encode(signUpRequest.getPassword()));
+            user.setRoles(roles);
+            userRepository.save(user);
+            userType="Manager";
+        }
 
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+        return ResponseEntity.ok(new MessageResponse(userType +" registered successfully!"));
     }
 }
 

@@ -29,15 +29,19 @@ public class Rental {
     @JsonIgnore
     private Car car;
 
-    // TODO: customer
-
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    @JsonIgnore
+    private Customer customer;
+  
     @OneToOne(mappedBy = "rental")
     private Invoice invoice;
+
 
     public Rental() {
     }
 
-    public Rental(UUID id, LocalDateTime pickup_datetime, LocalDateTime dropoff_datetime, String pickup_location, String dropoff_location, RentalStatus status, Car car) {
+    public Rental(UUID id, LocalDateTime pickup_datetime, LocalDateTime dropoff_datetime, String pickup_location, String dropoff_location, RentalStatus status, Car car, Customer customer) {
         this.id = id;
         this.pickup_datetime = pickup_datetime;
         this.dropoff_datetime = dropoff_datetime;
@@ -45,6 +49,7 @@ public class Rental {
         this.dropoff_location = dropoff_location;
         this.status = status;
         this.car = car;
+        this.customer = customer;
     }
 
     public UUID getId() {
@@ -101,5 +106,13 @@ public class Rental {
 
     public void setCar(Car car) {
         this.car = car;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }
