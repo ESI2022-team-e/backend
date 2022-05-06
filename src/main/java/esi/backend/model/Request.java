@@ -22,11 +22,15 @@ public class Request {
     @JoinColumn(name = "car_id")
     @JsonIgnore
     private Car car;
-    // TODO add customer
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "customer_id")
+    @JsonIgnore
+    private Customer customer;
 
     public Request() {}
 
-    public Request(UUID id, LocalDateTime pickup_datetime, LocalDateTime dropoff_datetime, String pickup_location, String dropoff_location, RequestStatus status, Car car) {
+    public Request(UUID id, LocalDateTime pickup_datetime, LocalDateTime dropoff_datetime, String pickup_location, String dropoff_location, RequestStatus status, Car car,Customer customer) {
         this.id = id;
         this.pickup_datetime = pickup_datetime;
         this.dropoff_datetime = dropoff_datetime;
@@ -34,6 +38,7 @@ public class Request {
         this.dropoff_location = dropoff_location;
         this.status = status;
         this.car = car;
+        this.customer = customer;
     }
 
     public UUID getId() {
@@ -90,5 +95,13 @@ public class Request {
 
     public void setCar(Car car) {
         this.car = car;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }
