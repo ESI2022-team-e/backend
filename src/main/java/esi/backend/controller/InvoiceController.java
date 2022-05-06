@@ -32,13 +32,10 @@ public class InvoiceController {
         return invoiceService.getInvoiceByRentalId(rentalId);
     }
 
-    // TODO: customer mappings
-    /*
     @RequestMapping("customers/{customerId}/invoices")
     public List<Invoice> getAllInvoicesByCustomerId(@PathVariable UUID customerId) {
         return invoiceService.getAllInvoicesByCustomer(customerId);
     }
-     */
 
     @RequestMapping("invoices")
     @PreAuthorize("hasRole('MANAGER')")

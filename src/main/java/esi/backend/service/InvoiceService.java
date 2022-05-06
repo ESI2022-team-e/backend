@@ -38,15 +38,12 @@ public class InvoiceService {
                 .orElseThrow(() -> new ResourceNotFoundException("Rental with id " + rentalId + " not found."));
     }
 
-    // TODO: get all invoices of one customer
-    /*
     public List<Invoice> getAllInvoicesByCustomer(UUID customerId) {
         // TODO: add check that the one asking has either:
         //  * ROLE: MANAGER
         //  * ROLE: CUSTOMER + the same id as the customerId in api
         return invoiceRepository.findByCustomerId(customerId);
     }
-     */
 
     public void addInvoice(Invoice invoice, UUID rentalId) {
         Rental rental = rentalRepository.findById(rentalId)
