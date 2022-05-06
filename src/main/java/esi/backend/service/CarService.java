@@ -37,9 +37,9 @@ public class CarService {
             if (car.getDaily_cost() >= 0) {
                 carInService.get().setDaily_cost(car.getDaily_cost());
             }
-            if (car.getLicence_plate() != null) {
+        if (car.getLicence_plate() != null) {
             carInService.get().setLicence_plate(car.getLicence_plate());
-            }
+        }
         carRepository.save(carInService.get());
     }
 

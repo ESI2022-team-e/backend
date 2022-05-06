@@ -65,6 +65,7 @@ public class Rental {
     public void setDropoff_datetime(LocalDateTime dropoff_date) {
         this.dropoff_datetime = dropoff_date;
     }
+
     public String getPickup_location() {
         return pickup_location;
     }
