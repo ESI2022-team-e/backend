@@ -1,16 +1,18 @@
 package esi.backend.service;
 
-import esi.backend.model.Car;
-import esi.backend.model.Invoice;
-import esi.backend.model.InvoiceStatus;
-import esi.backend.model.Rental;
+import esi.backend.model.*;
 import esi.backend.repository.CarRepository;
 import esi.backend.repository.CustomerRepository;
 import esi.backend.repository.InvoiceRepository;
 import esi.backend.repository.RentalRepository;
+import esi.backend.security.service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,38 +33,58 @@ public class RentalService {
     private InvoiceRepository invoiceRepository;
 
 
-    public List<Rental> getAllRentals() {
-        return (List<Rental>) rentalRepository.findAll();
+    public ResponseEntity<List<Rental>> getAllRentals() {
+        return new ResponseEntity<>(rentalRepository.findAll(), HttpStatus.OK);
     }
 
-    public List<Rental> getRentalsByCar(UUID carId) {
-        return rentalRepository.findByCarId(carId);
+    public ResponseEntity<List<Rental>> getRentalsByCar(UUID carId) {
+        Car car = carRepository.findById(carId).orElse(null);
+        return (car == null)
+                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(rentalRepository.findByCarId(carId),HttpStatus.OK);
     }
 
-    public Optional<Rental> getRental(UUID id) {
-        return rentalRepository.findById(id);
+    public ResponseEntity<Rental> getRental(UUID rentalId) {
+        Rental rental = rentalRepository.findById(rentalId).orElse(null);
+        return (rental == null)
+                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(rental, HttpStatus.OK);
     }
 
-    /*
-    public List<Rental> getAllCustomerRentals(long customerId) {
-        return rentalRepository.findByCustomerId(customerId);
+
+    public ResponseEntity<List<Rental>> getAllRentalsByCustomerId(UserDetailsImpl currentUser, long customerId) {
+        ResponseEntity<Customer> customerResponseEntity = authenticateCustomer(currentUser, customerId);
+        if (customerResponseEntity.getBody() == null)
+            return new ResponseEntity<>(customerResponseEntity.getStatusCode());
+        List<Rental> rentals = new ArrayList<>(customerResponseEntity.getBody().getRentals());
+        return new ResponseEntity<>(rentals, HttpStatus.OK);
     }
-    */
+
+    public ResponseEntity<Rental> getRentalByCustomerId(UserDetailsImpl currentUser,long customerId,UUID rentalId){
+        ResponseEntity<Customer> customerResponseEntity = authenticateCustomer(currentUser, customerId);
+        if (customerResponseEntity.getBody() == null)
+            return new ResponseEntity<>(customerResponseEntity.getStatusCode());
+        Rental rental = customerResponseEntity.getBody().getRentals().stream().filter(
+                req -> req.getId().equals(rentalId)).findFirst().orElse(null);
+        return (rental == null)
+                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(rental, HttpStatus.OK);
+    }
+
 
     public void addRental(Rental rental) {
         rentalRepository.save(rental);
-        createInvoice(rental);
     }
 
     public void updateRental(Rental rental, UUID carId, UUID rentalId) {
-        Optional<Car> car = carRepository.findById(carId);
-        Rental existingRental = rentalRepository.findById(rentalId).get();
+        Car car = carRepository.findById(carId).orElse(null);
+        Rental existingRental = rentalRepository.findById(rentalId).orElse(null);
 
-        if (rental.getStatus() != null)
-            existingRental.setStatus(rental.getStatus());
+        if (existingRental == null) return;
+        if (existingRental.getStatus().equals(RentalStatus.DONE)) return;
 
-        if (rental.getCar() != null && car.isPresent())
-            existingRental.setCar(car.get());
+        if (rental.getCar() != null && car != null)
+            existingRental.setCar(car);
 
         if (rental.getPickup_location() != null)
             existingRental.setPickup_location(rental.getPickup_location());
@@ -76,8 +98,15 @@ public class RentalService {
         if (rental.getDropoff_datetime() != null)
             existingRental.setDropoff_datetime(rental.getDropoff_datetime());
 
-        rentalRepository.save(rental);
+        if (rental.getStatus() != null){
+            if (rental.getStatus().equals(RentalStatus.DONE) && (existingRental.getStatus().equals(RentalStatus.CURRENT)))
+                createInvoice(existingRental);
+            existingRental.setStatus(rental.getStatus());
+            }
+
+        rentalRepository.save(existingRental);
     }
+
 
     public void deleteRental(UUID id) {
         rentalRepository.deleteById(id);
@@ -92,6 +121,16 @@ public class RentalService {
                 rental.getCustomer()
         );
         invoiceRepository.save(invoice);
+    }
+
+    // TODO find a way to avoid duplication of this method
+    public ResponseEntity<Customer> authenticateCustomer(UserDetailsImpl currentUser, long customerId) {
+        Customer customer = customerRepository.findById(customerId).orElse(null);
+        if (customer == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        // TODO change SimpleGrantedAuthority to isManager()
+        if (!currentUser.getAuthorities().contains(new SimpleGrantedAuthority(ERole.ROLE_MANAGER.name())) && !currentUser.getId().equals(customer.getId()))
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
 }
