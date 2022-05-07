@@ -10,10 +10,8 @@ import esi.backend.security.service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import esi.backend.service.CustomerService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,15 +50,17 @@ public class RequestService {
     }
 
     public ResponseEntity<List<Request>> getAllRequestsByCustomerId(UserDetailsImpl currentUser, long customerId) {
-        ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser,customerId);
-        if (customerResponseEntity.getBody() == null) return new ResponseEntity<>(customerResponseEntity.getStatusCode());
+        ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser, customerId);
+        if (customerResponseEntity.getBody() == null)
+            return new ResponseEntity<>(customerResponseEntity.getStatusCode());
         List<Request> requests = new ArrayList<>(customerResponseEntity.getBody().getRequests());
-        return new ResponseEntity<>(requests,HttpStatus.OK);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 
     public ResponseEntity<Request> getRequestByCustomerId(UserDetailsImpl currentUser, long customerId, UUID requestId) {
-        ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser,customerId);
-        if (customerResponseEntity.getBody() == null) return new ResponseEntity<>(customerResponseEntity.getStatusCode());
+        ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser, customerId);
+        if (customerResponseEntity.getBody() == null)
+            return new ResponseEntity<>(customerResponseEntity.getStatusCode());
         Request request = customerResponseEntity.getBody().getRequests().stream().filter(
                 req -> req.getId().equals(requestId)).findFirst().orElse(null);
         return (request == null)
@@ -78,7 +78,7 @@ public class RequestService {
         requestRepository.save(request);
     }
 
-    public void updateRequest(UserDetailsImpl user, Request request, UUID cardId,UUID requestId) {
+    public void updateRequest(UserDetailsImpl user, Request request, UUID cardId, UUID requestId) {
         Request req = requestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("Request with id " + requestId + " not found"));
         if (request.getPickup_datetime() != null) {

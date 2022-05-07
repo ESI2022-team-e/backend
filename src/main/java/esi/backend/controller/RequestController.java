@@ -2,12 +2,10 @@ package esi.backend.controller;
 
 import esi.backend.model.*;
 import esi.backend.security.service.UserDetailsImpl;
-import esi.backend.service.CustomerService;
 import esi.backend.service.RequestService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +19,7 @@ public class RequestController {
     private final RequestService requestService;
 
 
-    public RequestController(RequestService requestService, CustomerService customerService) {
+    public RequestController(RequestService requestService) {
         this.requestService = requestService;
     }
 
@@ -52,7 +50,7 @@ public class RequestController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}/requests/{requestId}")
     public ResponseEntity<?> updateRequest(@AuthenticationPrincipal final UserDetailsImpl currentUser, @RequestBody Request request, @PathVariable UUID carId, @PathVariable UUID requestId) {
-        requestService.updateRequest(currentUser, request, carId,requestId);
+        requestService.updateRequest(currentUser, request, carId, requestId);
         return ResponseEntity.ok("Request updated successfully!");
     }
 
