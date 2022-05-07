@@ -55,9 +55,9 @@ public class RequestService {
         requestRepository.save(request);
     }
 
-    public void updateRequest(UserDetails user, Request request, UUID id) {
-        Request req = requestRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Request with id " + id + " not found"));
+    public void updateRequest(UserDetails user, Request request, UUID cardId,UUID requestId) {
+        Request req = requestRepository.findById(requestId)
+                .orElseThrow(() -> new ResourceNotFoundException("Request with id " + requestId + " not found"));
         if (request.getPickup_datetime() != null) {
             req.setPickup_datetime(request.getPickup_datetime());
         }

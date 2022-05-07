@@ -52,9 +52,9 @@ public class RequestController {
         return ResponseEntity.ok("Request added successfully!");
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}/requests/{id}")
-    public ResponseEntity<?> updateRequest(@AuthenticationPrincipal final UserDetails currentUser, @RequestBody Request request, @PathVariable UUID carId, @PathVariable UUID id) {
-        requestService.updateRequest(currentUser, request, carId);
+    @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}/requests/{requestId}")
+    public ResponseEntity<?> updateRequest(@AuthenticationPrincipal final UserDetails currentUser, @RequestBody Request request, @PathVariable UUID carId, @PathVariable UUID requestId) {
+        requestService.updateRequest(currentUser, request, carId,requestId);
         return ResponseEntity.ok("Request updated successfully!");
     }
 
