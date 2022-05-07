@@ -4,6 +4,7 @@ import esi.backend.exception.ResourceNotFoundException;
 import esi.backend.exception.UnauthorizedException;
 import esi.backend.model.Car;
 import esi.backend.model.Customer;
+import esi.backend.model.Invoice;
 import esi.backend.model.Request;
 import esi.backend.repository.CustomerRepository;
 import esi.backend.security.service.UserDetailsImpl;
@@ -20,33 +21,24 @@ public class CustomerService {
     @Autowired
     CustomerRepository customerRepository;
 
-    public List<Customer> getAllCustomers(){
+    public ResponseEntity<List<Customer>> getAllCustomers(){
         List<Customer> customers = new ArrayList<>();
         customerRepository.findAll().forEach(customers::add);
-        return customers;
+        return new ResponseEntity<>(customers,HttpStatus.OK);
     }
 
-    public Optional<Customer> getCustomer(long id) {
-        return customerRepository.findById(id);
+    public ResponseEntity<Customer> getCustomer(long id) {
+        Customer customer = customerRepository.findById(id).orElse(null);
+        return (customer == null)
+                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
-    public ResponseEntity<List<Request>> getAllRequestsByCustomerId(UserDetailsImpl currentUser, long customerId) {
-        List<Request> requests = new ArrayList<>(findCustomer(currentUser,customerId).getRequests());
-        return new ResponseEntity<>(requests, HttpStatus.OK);
-    }
-
-    public ResponseEntity<Request> getRequestByCustomerId(UserDetailsImpl currentUser, long customerId, UUID requestId) {
-        Request request = findCustomer(currentUser,customerId).getRequests().stream().filter(
-                req -> req.getId().equals(requestId)).findFirst().
-                orElseThrow(() -> new ResourceNotFoundException("Request with id " + requestId + "not found"));
-        return new ResponseEntity<>(request, HttpStatus.OK);
-    }
-
-    private Customer findCustomer(UserDetailsImpl currentUser, long customerId){
-        Customer customer = customerRepository.findById(customerId).
-                orElseThrow(() -> new ResourceNotFoundException("Customer with id " + customerId + "not found"));
+    public ResponseEntity<Customer> authenticateCustomer(UserDetailsImpl currentUser, long customerId){
+        Customer customer = customerRepository.findById(customerId).orElse(null);
+        if (customer == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         if (!currentUser.isManager() && !currentUser.getId().equals(customer.getId()))
-            throw new UnauthorizedException("Unauthorized access to customer " +customerId + " data.");
-        return customer;
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 }

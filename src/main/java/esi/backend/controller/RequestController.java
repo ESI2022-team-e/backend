@@ -19,12 +19,10 @@ import java.util.UUID;
 public class RequestController {
 
     private final RequestService requestService;
-    private final CustomerService customerService;
 
 
     public RequestController(RequestService requestService, CustomerService customerService) {
         this.requestService = requestService;
-        this.customerService = customerService;
     }
 
     @RequestMapping("requests")
@@ -47,13 +45,13 @@ public class RequestController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/cars/{carId}/requests")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<?> addRequest(@AuthenticationPrincipal final UserDetails currentUser, @RequestBody Request request, @PathVariable UUID carId) {
+    public ResponseEntity<?> addRequest(@AuthenticationPrincipal final UserDetailsImpl currentUser, @RequestBody Request request, @PathVariable UUID carId) {
         requestService.addRequest(currentUser, request, carId);
         return ResponseEntity.ok("Request added successfully!");
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}/requests/{requestId}")
-    public ResponseEntity<?> updateRequest(@AuthenticationPrincipal final UserDetails currentUser, @RequestBody Request request, @PathVariable UUID carId, @PathVariable UUID requestId) {
+    public ResponseEntity<?> updateRequest(@AuthenticationPrincipal final UserDetailsImpl currentUser, @RequestBody Request request, @PathVariable UUID carId, @PathVariable UUID requestId) {
         requestService.updateRequest(currentUser, request, carId,requestId);
         return ResponseEntity.ok("Request updated successfully!");
     }
@@ -69,7 +67,7 @@ public class RequestController {
     public ResponseEntity<List<Request>> getCustomerRequests(
             @AuthenticationPrincipal final UserDetailsImpl currentUser,
             @PathVariable Long customerId) {
-        return customerService.getAllRequestsByCustomerId(currentUser, customerId);
+        return requestService.getAllRequestsByCustomerId(currentUser, customerId);
     }
 
     @GetMapping("/customers/{customerId}/requests/{requestId}")
@@ -78,6 +76,6 @@ public class RequestController {
             @AuthenticationPrincipal final UserDetailsImpl currentUser,
             @PathVariable long customerId,
             @PathVariable UUID requestId) {
-        return customerService.getRequestByCustomerId(currentUser, customerId, requestId);
+        return requestService.getRequestByCustomerId(currentUser, customerId, requestId);
     }
 }

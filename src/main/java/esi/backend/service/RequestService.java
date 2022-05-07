@@ -6,13 +6,16 @@ import esi.backend.repository.CarRepository;
 import esi.backend.repository.CustomerRepository;
 import esi.backend.repository.RentalRepository;
 import esi.backend.repository.RequestRepository;
+import esi.backend.security.service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import esi.backend.service.CustomerService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -28,6 +31,7 @@ public class RequestService {
     private CarRepository carRepository;
     @Autowired
     private CustomerRepository customerRepository;
+    private final CustomerService customerService = new CustomerService();
 
     public ResponseEntity<List<Request>> getAllRequests() {
         return new ResponseEntity<>(requestRepository.findAll(), HttpStatus.OK);
@@ -42,7 +46,26 @@ public class RequestService {
 
     public ResponseEntity<Request> getRequest(UUID id) {
         Request request = requestRepository.findById(id).orElse(null);
-        return (request == null) ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : new ResponseEntity<>(request, HttpStatus.OK);
+        return (request == null)
+                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(request, HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<Request>> getAllRequestsByCustomerId(UserDetailsImpl currentUser, long customerId) {
+        ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser,customerId);
+        if (customerResponseEntity.getBody() == null) return new ResponseEntity<>(customerResponseEntity.getStatusCode());
+        List<Request> requests = new ArrayList<>(customerResponseEntity.getBody().getRequests());
+        return new ResponseEntity<>(requests,HttpStatus.OK);
+    }
+
+    public ResponseEntity<Request> getRequestByCustomerId(UserDetailsImpl currentUser, long customerId, UUID requestId) {
+        ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser,customerId);
+        if (customerResponseEntity.getBody() == null) return new ResponseEntity<>(customerResponseEntity.getStatusCode());
+        Request request = customerResponseEntity.getBody().getRequests().stream().filter(
+                req -> req.getId().equals(requestId)).findFirst().orElse(null);
+        return (request == null)
+                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(request, HttpStatus.OK);
     }
 
     public void addRequest(UserDetails currentUser, Request request, UUID carId) {
@@ -55,7 +78,7 @@ public class RequestService {
         requestRepository.save(request);
     }
 
-    public void updateRequest(UserDetails user, Request request, UUID cardId,UUID requestId) {
+    public void updateRequest(UserDetailsImpl user, Request request, UUID cardId,UUID requestId) {
         Request req = requestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("Request with id " + requestId + " not found"));
         if (request.getPickup_datetime() != null) {
@@ -71,7 +94,7 @@ public class RequestService {
             if (request.getStatus().equals(RequestStatus.CANCELLED) || request.getStatus().equals(RequestStatus.REJECTED) || request.getStatus().equals(RequestStatus.PENDING)) {
                 req.setStatus(request.getStatus());
             }
-            if (request.getStatus().equals(RequestStatus.ACCEPTED) && user.getAuthorities().contains(new SimpleGrantedAuthority(ERole.ROLE_MANAGER.name()))) {
+            if (request.getStatus().equals(RequestStatus.ACCEPTED) && user.isManager()) {
                 req.setStatus(request.getStatus());
                 createRental(req);
             }
