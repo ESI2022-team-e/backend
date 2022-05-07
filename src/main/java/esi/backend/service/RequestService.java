@@ -29,7 +29,6 @@ public class RequestService {
     private CarRepository carRepository;
     @Autowired
     private CustomerRepository customerRepository;
-    private final CustomerService customerService = new CustomerService();
 
     public ResponseEntity<List<Request>> getAllRequests() {
         return new ResponseEntity<>(requestRepository.findAll(), HttpStatus.OK);
@@ -50,7 +49,7 @@ public class RequestService {
     }
 
     public ResponseEntity<List<Request>> getAllRequestsByCustomerId(UserDetailsImpl currentUser, long customerId) {
-        ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser, customerId);
+        ResponseEntity<Customer> customerResponseEntity = authenticateCustomer(currentUser, customerId);
         if (customerResponseEntity.getBody() == null)
             return new ResponseEntity<>(customerResponseEntity.getStatusCode());
         List<Request> requests = new ArrayList<>(customerResponseEntity.getBody().getRequests());
@@ -58,7 +57,7 @@ public class RequestService {
     }
 
     public ResponseEntity<Request> getRequestByCustomerId(UserDetailsImpl currentUser, long customerId, UUID requestId) {
-        ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser, customerId);
+        ResponseEntity<Customer> customerResponseEntity = authenticateCustomer(currentUser, customerId);
         if (customerResponseEntity.getBody() == null)
             return new ResponseEntity<>(customerResponseEntity.getStatusCode());
         Request request = customerResponseEntity.getBody().getRequests().stream().filter(
@@ -110,5 +109,13 @@ public class RequestService {
     public void createRental(Request request) {
         Rental rental = new Rental(request.getId(), request.getPickup_datetime(), request.getDropoff_datetime(), request.getPickup_location(), request.getDropoff_location(), RentalStatus.UPCOMING, request.getCar(), request.getCustomer());
         rentalRepository.save(rental);
+    }
+
+    public ResponseEntity<Customer> authenticateCustomer(UserDetailsImpl currentUser, long customerId) {
+        Customer customer = customerRepository.findById(customerId).orElse(null);
+        if (customer == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (!currentUser.isManager() && !currentUser.getId().equals(customer.getId()))
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 }
