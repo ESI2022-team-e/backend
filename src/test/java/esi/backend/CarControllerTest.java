@@ -66,7 +66,6 @@ public class CarControllerTest {
     }
 
 
-
     @Test
     @WithMockUser(roles = "MANAGER")
     public void postCarManagerTest() throws Exception {
