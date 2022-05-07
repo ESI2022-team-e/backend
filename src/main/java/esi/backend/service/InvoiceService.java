@@ -59,40 +59,36 @@ public class InvoiceService {
         return new ResponseEntity<>(invoiceRepository.findByCustomerId(customerId), HttpStatus.OK);
     }
 
-    public void addInvoice(Invoice invoice, UUID rentalId) {
+    public ResponseEntity<?> addInvoice(Invoice invoice, UUID rentalId) {
         Rental rental = rentalRepository.findById(rentalId).orElse(null);
         if (rental == null) {
-            new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            return;
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         // only allow one invoice per rental
         boolean invoiceExisting = invoiceRepository.findByRentalId(rentalId).isPresent();
         if (invoiceExisting) {
-            new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            return;
+            return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         invoice.setRental(rental);
         invoice.setCustomer(rental.getCustomer());
         invoiceRepository.save(invoice);
-        new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok("Request added successfully!");
 
     }
 
-    public void updateInvoice(UserDetailsImpl currentUser, UUID invoiceId, Invoice newInvoice) {
+    public ResponseEntity<?> updateInvoice(UserDetailsImpl currentUser, UUID invoiceId, Invoice newInvoice) {
         Invoice invoice = invoiceRepository.findById(invoiceId).orElse(null);
         if (invoice == null) {
-            new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            return;
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         if (!currentUser.getId().equals(invoice.getCustomer().getId())) {
-            new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            return;
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         // TODO: should manager be able to change the invoice status as well? - I propose no.
         // only allow changing the status of the invoice
         invoice.setStatus(newInvoice.getStatus());
         invoiceRepository.save(invoice);
-        new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok("Request updated successfully!");
     }
 
 }
