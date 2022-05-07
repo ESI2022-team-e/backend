@@ -13,11 +13,17 @@ public class Rental {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+
     private LocalDateTime pickup_datetime;
+
     private LocalDateTime dropoff_datetime;
+
     private String pickup_location;
+
     private String dropoff_location;
+
     private RentalStatus status;
+
     @ManyToOne
     @JoinColumn(name = "car_id")
     @JsonIgnore
@@ -27,6 +33,10 @@ public class Rental {
     @JoinColumn(name = "customer_id")
     @JsonIgnore
     private Customer customer;
+  
+    @OneToOne(mappedBy = "rental")
+    private Invoice invoice;
+
 
     public Rental() {
     }
