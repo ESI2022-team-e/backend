@@ -3,8 +3,9 @@ package esi.backend.service;
 import esi.backend.model.Car;
 import esi.backend.repository.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,14 +19,20 @@ public class CarService {
     @Autowired
     private CarRepository carRepository;
 
-    public List<Car> getAllCars(LocalDateTime startTime, LocalDateTime endTime) {
+    public ResponseEntity<List<Car>> getAllCars(LocalDateTime startTime, LocalDateTime endTime) {
         List<Car> cars = new ArrayList<>();
         carRepository.findAll().forEach(cars::add);
-        return cars;
+        if (startTime != null && endTime != null) {
+
+        }
+        return new ResponseEntity<>(cars, HttpStatus.OK);
     }
 
-    public Optional<Car> getCar(UUID id) {
-        return carRepository.findById(id);
+    public ResponseEntity<Car> getCar(UUID id) {
+        Car car = carRepository.findById(id).orElse(null);
+        return (car == null)
+                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(car, HttpStatus.OK);
     }
 
     public void addCar(Car car) {

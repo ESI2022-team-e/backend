@@ -2,6 +2,7 @@ package esi.backend.controller;
 
 import esi.backend.model.Car;
 import esi.backend.service.CarService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,12 +24,12 @@ public class CarController {
     }
 
     @GetMapping("/cars")
-    public List<Car> getAllCars(@RequestParam LocalDateTime startTime, @RequestParam LocalDateTime endTime) {
+    public ResponseEntity<List<Car>> getAllCars(@RequestParam LocalDateTime startTime, @RequestParam LocalDateTime endTime) {
         return carService.getAllCars(startTime, endTime);
     }
 
     @GetMapping("/cars/{carId}")
-    public Optional<Car> getCar(@PathVariable UUID carId) {
+    public ResponseEntity<Car> getCar(@PathVariable UUID carId) {
         return carService.getCar(carId);
     }
 
