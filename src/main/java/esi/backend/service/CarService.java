@@ -27,13 +27,14 @@ public class CarService {
         List<Car> cars = new ArrayList<>();
         carRepository.findAll().forEach(cars::add);
 
-        if (startTime != null && endTime != null) { // TODO: refactor this logic
-            List<Request> requests = new ArrayList<>();
-            requestRepository.findAll().forEach(requests::add);
-            for (Request r : requests) {
-                if (r.getPickup_datetime().isBefore(endTime) && startTime.isBefore(r.getDropoff_datetime())) {
-                    if (r.getStatus() == RequestStatus.ACCEPTED || r.getStatus() == RequestStatus.PENDING) {
-                        cars.remove(r.getCar());
+        if (startTime != null && endTime != null) {
+            List<Request> requests = new ArrayList<>(requestRepository.findAll());
+            if (!requests.isEmpty()) {
+                for (Request r : requests) {
+                    if (r.getPickup_datetime().isBefore(endTime) && startTime.isBefore(r.getDropoff_datetime())) {
+                        if (r.getStatus() == RequestStatus.ACCEPTED || r.getStatus() == RequestStatus.PENDING) {
+                            cars.remove(r.getCar());
+                        }
                     }
                 }
             }

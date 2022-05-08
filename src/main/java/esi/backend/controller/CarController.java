@@ -24,7 +24,7 @@ public class CarController {
     }
 
     @GetMapping("/cars")
-    public ResponseEntity<List<Car>> getAllCars(@RequestParam(value = "startTime", required = false) LocalDateTime startTime, @RequestParam(value = "endTime", required = false) LocalDateTime endTime) {
+    public ResponseEntity<List<Car>> getAllCars(@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime) {
         return carService.getAllCars(startTime, endTime);
     }
 
