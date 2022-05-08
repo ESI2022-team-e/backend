@@ -4,7 +4,9 @@ import esi.backend.model.Car;
 import esi.backend.repository.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +18,7 @@ public class CarService {
     @Autowired
     private CarRepository carRepository;
 
-    public List<Car> getAllCars() {
+    public List<Car> getAllCars(LocalDateTime startTime, LocalDateTime endTime) {
         List<Car> cars = new ArrayList<>();
         carRepository.findAll().forEach(cars::add);
         return cars;

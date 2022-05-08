@@ -5,6 +5,7 @@ import esi.backend.service.CarService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,8 +23,8 @@ public class CarController {
     }
 
     @GetMapping("/cars")
-    public List<Car> getAllCars() {
-        return carService.getAllCars();
+    public List<Car> getAllCars(@RequestParam LocalDateTime startTime, @RequestParam LocalDateTime endTime) {
+        return carService.getAllCars(startTime, endTime);
     }
 
     @GetMapping("/cars/{carId}")
