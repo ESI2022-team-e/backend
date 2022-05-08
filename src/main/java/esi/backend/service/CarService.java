@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -35,25 +34,29 @@ public class CarService {
                 : new ResponseEntity<>(car, HttpStatus.OK);
     }
 
-    public void addCar(Car car) {
+    public ResponseEntity<?> addCar(Car car) {
         carRepository.save(car);
+        return ResponseEntity.ok("Car added successfully!");
     }
 
-    public void updateCar(Car car, UUID carId) {
-        Optional<Car> carInService = carRepository.findById(carId);
-
-        if (carInService.isPresent())
-            if (car.getDaily_cost() >= 0) {
-                carInService.get().setDaily_cost(car.getDaily_cost());
-            }
-        if (car.getLicence_plate() != null) {
-            carInService.get().setLicence_plate(car.getLicence_plate());
+    public ResponseEntity<?> updateCar(Car newCar, UUID carId) {
+        Car car = carRepository.findById(carId).orElse(null);
+        if (car == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        carRepository.save(carInService.get());
+        if (newCar.getDaily_cost() >= 0) {
+            car.setDaily_cost(newCar.getDaily_cost());
+        }
+        if (newCar.getLicence_plate() != null) {
+            car.setLicence_plate(newCar.getLicence_plate());
+        }
+        carRepository.save(car);
+        return ResponseEntity.ok("Car updated successfully!");
     }
 
-    public void deleteCar(UUID id) {
+    public ResponseEntity<?> deleteCar(UUID id) {
         carRepository.deleteById(id);
+        return ResponseEntity.ok("Car deleted successfully!");
     }
 }
 

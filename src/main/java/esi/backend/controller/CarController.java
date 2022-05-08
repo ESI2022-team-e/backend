@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 //@CrossOrigin(origins = "http://localhost:8081")
@@ -35,19 +34,19 @@ public class CarController {
 
     @PostMapping("/cars")
     @PreAuthorize("hasRole('MANAGER')")
-    public void addCar(@RequestBody Car car) {
-        carService.addCar(car);
+    public ResponseEntity<?> addCar(@RequestBody Car car) {
+        return carService.addCar(car);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}")
     @PreAuthorize("hasRole('MANAGER')")
-    public void updateCar(@RequestBody Car car, @PathVariable UUID carId) {
-        carService.updateCar(car, carId);
+    public ResponseEntity<?> updateCar(@RequestBody Car car, @PathVariable UUID carId) {
+        return carService.updateCar(car, carId);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/cars/{carId}")
     @PreAuthorize("hasRole('MANAGER')")
-    public void deleteCar(@PathVariable UUID carId) {
-        carService.deleteCar(carId);
+    public ResponseEntity<?> deleteCar(@PathVariable UUID carId) {
+        return carService.deleteCar(carId);
     }
 }
