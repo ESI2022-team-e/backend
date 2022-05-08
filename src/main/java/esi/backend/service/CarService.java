@@ -1,7 +1,10 @@
 package esi.backend.service;
 
 import esi.backend.model.Car;
+import esi.backend.model.Request;
+import esi.backend.model.RequestStatus;
 import esi.backend.repository.CarRepository;
+import esi.backend.repository.RequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +20,22 @@ public class CarService {
 
     @Autowired
     private CarRepository carRepository;
+    @Autowired
+    private RequestRepository requestRepository;
 
     public ResponseEntity<List<Car>> getAllCars(LocalDateTime startTime, LocalDateTime endTime) {
         List<Car> cars = new ArrayList<>();
         carRepository.findAll().forEach(cars::add);
-        if (startTime != null && endTime != null) {
-
+        if (startTime != null && endTime != null) { // TODO: refactor this logic
+            List<Request> requests = new ArrayList<>();
+            requestRepository.findAll().forEach(requests::add);
+            for (Request r : requests) {
+                if (r.getPickup_datetime().isBefore(endTime) && startTime.isBefore(r.getDropoff_datetime())) {
+                    if (r.getStatus() == RequestStatus.ACCEPTED || r.getStatus() == RequestStatus.PENDING) {
+                        cars.remove(r.getCar());
+                    }
+                }
+            }
         }
         return new ResponseEntity<>(cars, HttpStatus.OK);
     }
