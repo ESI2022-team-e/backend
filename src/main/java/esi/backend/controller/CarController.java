@@ -2,6 +2,7 @@ package esi.backend.controller;
 
 import esi.backend.model.Car;
 import esi.backend.service.CarService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class CarController {
     }
 
     @GetMapping("/cars")
-    public ResponseEntity<List<Car>> getAllCars(@RequestParam LocalDateTime startTime, @RequestParam LocalDateTime endTime) {
+    public ResponseEntity<List<Car>> getAllCars(@RequestParam(value = "startTime", required = false) LocalDateTime startTime, @RequestParam(value = "endTime", required = false) LocalDateTime endTime) {
         return carService.getAllCars(startTime, endTime);
     }
 

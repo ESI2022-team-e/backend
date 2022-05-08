@@ -26,6 +26,7 @@ public class CarService {
     public ResponseEntity<List<Car>> getAllCars(LocalDateTime startTime, LocalDateTime endTime) {
         List<Car> cars = new ArrayList<>();
         carRepository.findAll().forEach(cars::add);
+
         if (startTime != null && endTime != null) { // TODO: refactor this logic
             List<Request> requests = new ArrayList<>();
             requestRepository.findAll().forEach(requests::add);
