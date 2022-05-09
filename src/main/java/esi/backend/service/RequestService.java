@@ -87,14 +87,14 @@ public class RequestService {
             new ResponseEntity<>(customerResponseEntity.getStatusCode());
             return;
         }
-        if (request.getPickup_datetime() != null) {
-            currentRequest.setPickup_datetime(request.getPickup_datetime());
+        if (request.getPickupDatetime() != null) {
+            currentRequest.setPickupDatetime(request.getPickupDatetime());
         }
-        if (request.getDropoff_datetime() != null) {
-            currentRequest.setDropoff_datetime(request.getDropoff_datetime());
+        if (request.getDropoffDatetime() != null) {
+            currentRequest.setDropoffDatetime(request.getDropoffDatetime());
         }
-        if (request.getDropoff_location() != null) {
-            currentRequest.setDropoff_location(request.getDropoff_location());
+        if (request.getDropoffLocation() != null) {
+            currentRequest.setDropoffLocation(request.getDropoffLocation());
         }
         if (request.getStatus() != null) {
             if (request.getStatus().equals(RequestStatus.CANCELLED) || request.getStatus().equals(RequestStatus.REJECTED) || request.getStatus().equals(RequestStatus.PENDING)) {
@@ -114,7 +114,7 @@ public class RequestService {
 
 
     public void createRental(Request request) {
-        Rental rental = new Rental(request.getId(), request.getPickup_datetime(), request.getDropoff_datetime(), request.getPickup_location(), request.getDropoff_location(), RentalStatus.UPCOMING, request.getCar(), request.getCustomer());
+        Rental rental = new Rental(request.getId(), request.getPickupDatetime(), request.getDropoffDatetime(), request.getPickupLocation(), request.getDropoffLocation(), RentalStatus.UPCOMING, request.getCar(), request.getCustomer());
         rentalRepository.save(rental);
     }
 

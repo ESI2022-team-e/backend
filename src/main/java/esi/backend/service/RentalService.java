@@ -1,6 +1,7 @@
 package esi.backend.service;
 
 import esi.backend.model.*;
+import esi.backend.payload.response.MessageResponse;
 import esi.backend.repository.CarRepository;
 import esi.backend.repository.CustomerRepository;
 import esi.backend.repository.InvoiceRepository;
@@ -27,7 +28,7 @@ public class RentalService {
     private CarRepository carRepository;
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private CustomerService customerService;
 
     @Autowired
     private InvoiceRepository invoiceRepository;
@@ -53,7 +54,7 @@ public class RentalService {
 
 
     public ResponseEntity<List<Rental>> getAllRentalsByCustomerId(UserDetailsImpl currentUser, long customerId) {
-        ResponseEntity<Customer> customerResponseEntity = authenticateCustomer(currentUser, customerId);
+        ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser, customerId);
         if (customerResponseEntity.getBody() == null)
             return new ResponseEntity<>(customerResponseEntity.getStatusCode());
         List<Rental> rentals = new ArrayList<>(customerResponseEntity.getBody().getRentals());
@@ -61,7 +62,7 @@ public class RentalService {
     }
 
     public ResponseEntity<Rental> getRentalByCustomerId(UserDetailsImpl currentUser,long customerId,UUID rentalId){
-        ResponseEntity<Customer> customerResponseEntity = authenticateCustomer(currentUser, customerId);
+        ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser, customerId);
         if (customerResponseEntity.getBody() == null)
             return new ResponseEntity<>(customerResponseEntity.getStatusCode());
         Rental rental = customerResponseEntity.getBody().getRentals().stream().filter(
@@ -72,31 +73,26 @@ public class RentalService {
     }
 
 
-    public void addRental(Rental rental) {
+    public ResponseEntity<?> addRental(Rental rental) {
         rentalRepository.save(rental);
+        return ResponseEntity.ok("Rental added successfully!");
     }
 
-    public void updateRental(Rental rental, UUID carId, UUID rentalId) {
-        Car car = carRepository.findById(carId).orElse(null);
-        Rental existingRental = rentalRepository.findById(rentalId).orElse(null);
+    public ResponseEntity<?> updateRental(Rental rental, UUID carId, UUID rentalId) {
+        Rental existingRental = rentalRepository.findRentalByIdAndCarId(rentalId,carId).orElse(null);
 
-        if (existingRental == null) return;
-        if (existingRental.getStatus().equals(RentalStatus.DONE)) return;
+        if (existingRental == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (existingRental.getStatus().equals(RentalStatus.DONE)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        if (rental.getCar() != null && car != null)
-            existingRental.setCar(car);
+        if (rental.getPickupDatetime() != null || rental.getDropoffDatetime() != null)
+            existingRental = extendRental(rental, existingRental);
+        if (existingRental == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        if (rental.getPickup_location() != null)
-            existingRental.setPickup_location(rental.getPickup_location());
+        if (rental.getPickupLocation() != null)
+            existingRental.setPickupLocation(rental.getPickupLocation());
 
-        if (rental.getPickup_datetime() != null)
-            existingRental.setPickup_datetime(rental.getPickup_datetime());
-
-        if (rental.getDropoff_location() != null)
-            existingRental.setDropoff_location(rental.getDropoff_location());
-
-        if (rental.getDropoff_datetime() != null)
-            existingRental.setDropoff_datetime(rental.getDropoff_datetime());
+        if (rental.getDropoffLocation() != null)
+            existingRental.setDropoffLocation(rental.getDropoffLocation());
 
         if (rental.getStatus() != null){
             if (rental.getStatus().equals(RentalStatus.DONE) && (existingRental.getStatus().equals(RentalStatus.CURRENT)))
@@ -105,17 +101,28 @@ public class RentalService {
             }
 
         rentalRepository.save(existingRental);
+        return ResponseEntity.ok("Rental updated successfully!");
     }
 
-
-    public void deleteRental(UUID id) {
+    public ResponseEntity<?> deleteRental(UUID id) {
         rentalRepository.deleteById(id);
+        return ResponseEntity.ok("Rental deleted successfully!");
     }
+
+    private Rental extendRental(Rental rental, Rental existingRental){
+        if (rental.getDropoffDatetime() != null) existingRental.setDropoffDatetime(rental.getDropoffDatetime());
+        if (rental.getPickupDatetime() != null) existingRental.setPickupDatetime(rental.getPickupDatetime());
+        return rentalRepository.getRentalByPickupDatetimeBeforeAndDropoffDatetimeAfter(
+                existingRental.getDropoffDatetime(),existingRental.getPickupDatetime()).isEmpty()
+                ? existingRental
+                : null;
+    }
+
 
     public void createInvoice(Rental rental) {
         Invoice invoice = new Invoice(
                 rental.getId(),
-                rental.getPickup_datetime(),
+                rental.getPickupDatetime(),
                 InvoiceStatus.UNPAID,
                 rental,
                 rental.getCustomer()
@@ -123,14 +130,5 @@ public class RentalService {
         invoiceRepository.save(invoice);
     }
 
-    // TODO find a way to avoid duplication of this method
-    public ResponseEntity<Customer> authenticateCustomer(UserDetailsImpl currentUser, long customerId) {
-        Customer customer = customerRepository.findById(customerId).orElse(null);
-        if (customer == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        // TODO change SimpleGrantedAuthority to isManager()
-        if (!currentUser.getAuthorities().contains(new SimpleGrantedAuthority(ERole.ROLE_MANAGER.name())) && !currentUser.getId().equals(customer.getId()))
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        return new ResponseEntity<>(customer, HttpStatus.OK);
-    }
 
 }

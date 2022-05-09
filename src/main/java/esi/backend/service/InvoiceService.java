@@ -72,7 +72,7 @@ public class InvoiceService {
         invoice.setRental(rental);
         invoice.setCustomer(rental.getCustomer());
         invoiceRepository.save(invoice);
-        return ResponseEntity.ok("Request added successfully!");
+        return ResponseEntity.ok("Invoice added successfully!");
 
     }
 
@@ -88,7 +88,7 @@ public class InvoiceService {
         // only allow changing the status of the invoice
         invoice.setStatus(newInvoice.getStatus());
         invoiceRepository.save(invoice);
-        return ResponseEntity.ok("Request updated successfully!");
+        return ResponseEntity.ok("Invoice updated successfully!");
     }
 
 }

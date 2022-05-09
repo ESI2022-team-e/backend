@@ -136,7 +136,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"pickup_datetime\": \"2022-01-10T17:09:42.411\",\r\n    \"dropoff_datetime\": \"2022-01-13T17:09:42.411\",\r\n    \"pickup_location\": \"Turu tn 5\",\r\n    \"dropoff_location\": \"Delta\",\r\n    \"status\": \"PENDING\"\r\n}",
+              "raw": "{\r\n    \"pickupDatetime\": \"2022-01-10T17:09:42.411\",\r\n    \"dropoffDatetime\": \"2022-01-13T17:09:42.411\",\r\n    \"pickupLocation\": \"Turu tn 5\",\r\n    \"dropoffLocation\": \"Delta\",\r\n    \"status\": \"PENDING\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"

@@ -13,10 +13,10 @@ public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    private LocalDateTime pickup_datetime;
-    private LocalDateTime dropoff_datetime;
-    private String pickup_location;
-    private String dropoff_location;
+    private LocalDateTime pickupDatetime;
+    private LocalDateTime dropoffDatetime;
+    private String pickupLocation;
+    private String dropoffLocation;
     private RequestStatus status;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "car_id")
@@ -31,12 +31,12 @@ public class Request {
     public Request() {
     }
 
-    public Request(UUID id, LocalDateTime pickup_datetime, LocalDateTime dropoff_datetime, String pickup_location, String dropoff_location, RequestStatus status, Car car, Customer customer) {
+    public Request(UUID id, LocalDateTime pickupDatetime, LocalDateTime dropoffDatetime, String pickupLocation, String dropoffLocation, RequestStatus status, Car car, Customer customer) {
         this.id = id;
-        this.pickup_datetime = pickup_datetime;
-        this.dropoff_datetime = dropoff_datetime;
-        this.pickup_location = pickup_location;
-        this.dropoff_location = dropoff_location;
+        this.pickupDatetime = pickupDatetime;
+        this.dropoffDatetime = dropoffDatetime;
+        this.pickupLocation = pickupLocation;
+        this.dropoffLocation = dropoffLocation;
         this.status = status;
         this.car = car;
         this.customer = customer;
@@ -50,36 +50,36 @@ public class Request {
         this.id = id;
     }
 
-    public LocalDateTime getPickup_datetime() {
-        return pickup_datetime;
+    public LocalDateTime getPickupDatetime() {
+        return pickupDatetime;
     }
 
-    public void setPickup_datetime(LocalDateTime pickup_date) {
-        this.pickup_datetime = pickup_date;
+    public void setPickupDatetime(LocalDateTime pickupDate) {
+        this.pickupDatetime = pickupDate;
     }
 
-    public LocalDateTime getDropoff_datetime() {
-        return dropoff_datetime;
+    public LocalDateTime getDropoffDatetime() {
+        return dropoffDatetime;
     }
 
-    public void setDropoff_datetime(LocalDateTime dropoff_date) {
-        this.dropoff_datetime = dropoff_date;
+    public void setDropoffDatetime(LocalDateTime dropoffDate) {
+        this.dropoffDatetime = dropoffDate;
     }
 
-    public String getPickup_location() {
-        return pickup_location;
+    public String getPickupLocation() {
+        return pickupLocation;
     }
 
-    public void setPickup_location(String pickup_location) {
-        this.pickup_location = pickup_location;
+    public void setPickupLocation(String pickupLocation) {
+        this.pickupLocation = pickupLocation;
     }
 
-    public String getDropoff_location() {
-        return dropoff_location;
+    public String getDropoffLocation() {
+        return dropoffLocation;
     }
 
-    public void setDropoff_location(String dropoff_location) {
-        this.dropoff_location = dropoff_location;
+    public void setDropoffLocation(String dropoffLocation) {
+        this.dropoffLocation = dropoffLocation;
     }
 
     public RequestStatus getStatus() {
