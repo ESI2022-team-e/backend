@@ -1,8 +1,11 @@
 package esi.backend.controller;
 
 import esi.backend.model.Rental;
+import esi.backend.security.service.UserDetailsImpl;
 import esi.backend.service.RentalService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,54 +26,58 @@ public class RentalController {
 
     @RequestMapping("/rentals")
     @PreAuthorize("hasRole('MANAGER')")
-    public List<Rental> getAllRentals() {
+    public ResponseEntity<List<Rental>> getAllRentals() {
         return rentalService.getAllRentals();
     }
 
     @RequestMapping("/cars/{carId}/rentals")
     @PreAuthorize("hasRole('MANAGER')")
-    public List<Rental> getRentalsByCar(@PathVariable UUID carId) {
+    public ResponseEntity<List<Rental>> getRentalsByCar(@PathVariable UUID carId) {
         return rentalService.getRentalsByCar(carId);
     }
 
     @RequestMapping("/cars/{carId}/rentals/{rentalId}")
     @PreAuthorize("hasRole('MANAGER')")
-    public Optional<Rental> getRental(@PathVariable UUID carId, @PathVariable UUID rentalId) {
+    public ResponseEntity<Rental> getRental(@PathVariable UUID carId, @PathVariable UUID rentalId) {
         return rentalService.getRental(rentalId);
     }
 
-    // TODO: customer is yet to be added
-    /*
+
     @RequestMapping("/customers/{customerId}/rentals")
-    @PreAuthorize("hasRole('CUSTOMER')")
-    public List<Rental> getAllCustomerRentals(@PathVariable Integer customerId) {
-        return rentalService.getAllCustomerRentals(customerId);
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('MANAGER')")
+    public ResponseEntity<List<Rental>> getAllRentalsByCustomerId(
+            @AuthenticationPrincipal UserDetailsImpl currentUser,
+            @PathVariable long customerId) {
+        return rentalService.getAllRentalsByCustomerId(currentUser,customerId);
     }
 
     @RequestMapping("/customers/{customerId}/rentals/{rentalId}")
-    @PreAuthorize("hasRole('CUSTOMER')")
-    public Optional<Rental> getCustomerRental(@PathVariable UUID customerId, @PathVariable UUID rentalId) {
-        return rentalService.getRental(rentalId);
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('MANAGER')")
+    public ResponseEntity<Rental> getRentalByCustomerId(
+            @AuthenticationPrincipal UserDetailsImpl currentUser,
+            @PathVariable long customerId,
+            @PathVariable UUID rentalId) {
+        return rentalService.getRentalByCustomerId(currentUser,customerId,rentalId);
     }
-    */
+
 
     @RequestMapping(method = RequestMethod.POST, value = "/cars/{carId}/rentals")
     @PreAuthorize("hasRole('MANAGER')")
-    public void addRental(@RequestBody Rental rental, @PathVariable UUID carId) {
-        rentalService.addRental(rental);
+    public ResponseEntity<?> addRental(@RequestBody Rental rental, @PathVariable UUID carId) {
+        return rentalService.addRental(rental);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}/rentals/{rentalId}")
     @PreAuthorize("hasRole('MANAGER')")
-    public void updateRental(@RequestBody Rental rental, @PathVariable UUID
+    public ResponseEntity<?> updateRental(@RequestBody Rental rental, @PathVariable UUID
             carId, @PathVariable UUID rentalId) {
-        rentalService.updateRental(rental, carId, rentalId);
+        return rentalService.updateRental(rental, carId, rentalId);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/cars/{carId}/rentals/{rentalId}")
     @PreAuthorize("hasRole('MANAGER')")
-    public void deleteRental(@PathVariable UUID rentalId, @PathVariable String carId) {
-        rentalService.deleteRental(rentalId);
+    public ResponseEntity<?> deleteRental(@PathVariable UUID rentalId, @PathVariable String carId) {
+        return rentalService.deleteRental(rentalId);
     }
 
 }

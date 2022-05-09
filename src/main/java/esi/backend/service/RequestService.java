@@ -21,12 +21,16 @@ public class RequestService {
 
     @Autowired
     private RequestRepository requestRepository;
+  
     @Autowired
     private RentalRepository rentalRepository;
+  
     @Autowired
     private CarRepository carRepository;
+  
     @Autowired
     private CustomerRepository customerRepository;
+  
     @Autowired
     private CustomerService customerService;
 
@@ -73,7 +77,7 @@ public class RequestService {
             return;
         }
         request.setCar(car);
-        customerRepository.findByUsername(currentUser.getUsername()).ifPresent(request::setCustomer);
+        customerRepository.findCustomerByUsername(currentUser.getUsername()).ifPresent(request::setCustomer);
         requestRepository.save(request);
     }
 
@@ -86,14 +90,14 @@ public class RequestService {
         if (customerResponseEntity.getBody() == null) {
             return new ResponseEntity<>(customerResponseEntity.getStatusCode());
         }
-        if (newData.getPickup_datetime() != null) {
-            request.setPickup_datetime(newData.getPickup_datetime());
+        if (newData.getPickupDatetime() != null) {
+            request.setPickupDatetime(newData.getPickupDatetime());
         }
-        if (newData.getDropoff_datetime() != null) {
-            request.setDropoff_datetime(newData.getDropoff_datetime());
+        if (newData.getDropoffDatetime() != null) {
+            request.setDropoffDatetime(newData.getDropoffDatetime());
         }
-        if (newData.getDropoff_location() != null) {
-            request.setDropoff_location(newData.getDropoff_location());
+        if (newData.getDropoffLocation() != null) {
+            request.setDropoffLocation(newData.getDropoffLocation());
         }
         if (newData.getStatus() != null) {
             if (newData.getStatus().equals(RequestStatus.CANCELLED) || newData.getStatus().equals(RequestStatus.REJECTED) || newData.getStatus().equals(RequestStatus.PENDING)) {
@@ -117,7 +121,7 @@ public class RequestService {
 
 
     public void createRental(Request request) {
-        Rental rental = new Rental(request.getId(), request.getPickup_datetime(), request.getDropoff_datetime(), request.getPickup_location(), request.getDropoff_location(), RentalStatus.UPCOMING, request.getCar(), request.getCustomer());
+        Rental rental = new Rental(request.getId(), request.getPickupDatetime(), request.getDropoffDatetime(), request.getPickupLocation(), request.getDropoffLocation(), RentalStatus.UPCOMING, request.getCar(), request.getCustomer());
         rentalRepository.save(rental);
     }
 

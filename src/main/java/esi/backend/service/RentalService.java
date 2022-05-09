@@ -2,15 +2,17 @@ package esi.backend.service;
 
 import esi.backend.model.*;
 import esi.backend.repository.CarRepository;
-import esi.backend.repository.CustomerRepository;
 import esi.backend.repository.InvoiceRepository;
 import esi.backend.repository.RentalRepository;
+import esi.backend.security.service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -23,74 +25,108 @@ public class RentalService {
     private CarRepository carRepository;
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private CustomerService customerService;
 
     @Autowired
     private InvoiceRepository invoiceRepository;
 
 
-    public List<Rental> getAllRentals() {
-        return (List<Rental>) rentalRepository.findAll();
+    public ResponseEntity<List<Rental>> getAllRentals() {
+        return new ResponseEntity<>(rentalRepository.findAll(), HttpStatus.OK);
     }
 
-    public List<Rental> getRentalsByCar(UUID carId) {
-        return rentalRepository.findByCarId(carId);
+    public ResponseEntity<List<Rental>> getRentalsByCar(UUID carId) {
+        Car car = carRepository.findById(carId).orElse(null);
+        return (car == null)
+                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(rentalRepository.findByCarId(carId),HttpStatus.OK);
     }
 
-    public Optional<Rental> getRental(UUID id) {
-        return rentalRepository.findById(id);
+    public ResponseEntity<Rental> getRental(UUID rentalId) {
+        Rental rental = rentalRepository.findById(rentalId).orElse(null);
+        return (rental == null)
+                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(rental, HttpStatus.OK);
     }
 
-    /*
-    public List<Rental> getAllCustomerRentals(long customerId) {
-        return rentalRepository.findByCustomerId(customerId);
-    }
-    */
 
-    public void addRental(Rental rental) {
+    public ResponseEntity<List<Rental>> getAllRentalsByCustomerId(UserDetailsImpl currentUser, long customerId) {
+        ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser, customerId);
+        if (customerResponseEntity.getBody() == null)
+            return new ResponseEntity<>(customerResponseEntity.getStatusCode());
+        List<Rental> rentals = new ArrayList<>(customerResponseEntity.getBody().getRentals());
+        return new ResponseEntity<>(rentals, HttpStatus.OK);
+    }
+
+    public ResponseEntity<Rental> getRentalByCustomerId(UserDetailsImpl currentUser,long customerId,UUID rentalId){
+        ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser, customerId);
+        if (customerResponseEntity.getBody() == null)
+            return new ResponseEntity<>(customerResponseEntity.getStatusCode());
+        Rental rental = customerResponseEntity.getBody().getRentals().stream().filter(
+                req -> req.getId().equals(rentalId)).findFirst().orElse(null);
+        return (rental == null)
+                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(rental, HttpStatus.OK);
+    }
+
+
+    public ResponseEntity<?> addRental(Rental rental) {
         rentalRepository.save(rental);
+        return ResponseEntity.ok("Rental added successfully!");
     }
 
-    public void updateRental(Rental rental, UUID carId, UUID rentalId) {
-        Optional<Car> car = carRepository.findById(carId);
-        Rental existingRental = rentalRepository.findById(rentalId).orElse(null);
+    public ResponseEntity<?> updateRental(Rental rental, UUID carId, UUID rentalId) {
+        Rental existingRental = rentalRepository.findRentalByIdAndCarId(rentalId,carId).orElse(null);
 
-        if (existingRental != null) {
-            if (rental.getStatus() != null) {
-                existingRental.setStatus(rental.getStatus());
-                if (rental.getStatus().equals(RentalStatus.DONE))
-                    createInvoice(rental);
+        if (existingRental == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      
+        if (existingRental.getStatus().equals(RentalStatus.DONE)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        if (rental.getPickupDatetime() != null || rental.getDropoffDatetime() != null)
+            existingRental = extendRental(rental, existingRental);
+      
+        if (existingRental == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        if (rental.getPickupLocation() != null)
+            existingRental.setPickupLocation(rental.getPickupLocation());
+
+        if (rental.getDropoffLocation() != null)
+            existingRental.setDropoffLocation(rental.getDropoffLocation());
+
+        if (rental.getStatus() != null){
+            if (rental.getStatus().equals(RentalStatus.DONE) && (existingRental.getStatus().equals(RentalStatus.CURRENT)))
+                createInvoice(existingRental);
+            existingRental.setStatus(rental.getStatus());
             }
 
-            if (rental.getCar() != null && car.isPresent())
-                existingRental.setCar(car.get());
-
-            if (rental.getPickup_location() != null)
-                existingRental.setPickup_location(rental.getPickup_location());
-
-            if (rental.getPickup_datetime() != null)
-                existingRental.setPickup_datetime(rental.getPickup_datetime());
-
-            if (rental.getDropoff_location() != null)
-                existingRental.setDropoff_location(rental.getDropoff_location());
-
-            if (rental.getDropoff_datetime() != null)
-                existingRental.setDropoff_datetime(rental.getDropoff_datetime());
-        }
-
-        rentalRepository.save(rental);
+        rentalRepository.save(existingRental);
+        return ResponseEntity.ok("Rental updated successfully!");
     }
 
-    public void deleteRental(UUID id) {
+    public ResponseEntity<?> deleteRental(UUID id) {
         rentalRepository.deleteById(id);
+        return ResponseEntity.ok("Rental deleted successfully!");
     }
+
+    private Rental extendRental(Rental rental, Rental existingRental){
+        if (rental.getDropoffDatetime() != null) existingRental.setDropoffDatetime(rental.getDropoffDatetime());
+        if (rental.getPickupDatetime() != null) {
+            if (existingRental.getStatus().equals(RentalStatus.UPCOMING))
+                existingRental.setPickupDatetime(rental.getPickupDatetime());
+        }
+        return rentalRepository.getRentalByPickupDatetimeBeforeAndDropoffDatetimeAfter(
+                existingRental.getDropoffDatetime(),existingRental.getPickupDatetime()).isEmpty()
+                ? existingRental
+                : null;
+    }
+
 
     public void createInvoice(Rental rental) {
         double daily_cost = rental.getCar().getDaily_cost();
-        long days = Duration.between(rental.getPickup_datetime(), rental.getDropoff_datetime()).toDays();
+        long days = Duration.between(rental.getPickupDatetime(), rental.getDropoffDatetime()).toDays();
         Invoice invoice = new Invoice(
                 rental.getId(),
-                rental.getPickup_datetime(),
+                rental.getPickupDatetime(),
                 InvoiceStatus.UNPAID,
                 days * daily_cost,
                 rental,
@@ -98,5 +134,6 @@ public class RentalService {
         );
         invoiceRepository.save(invoice);
     }
+
 
 }

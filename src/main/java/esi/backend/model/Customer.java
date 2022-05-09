@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@DiscriminatorValue("user")
 public class Customer extends User {
 
     private String firstName;

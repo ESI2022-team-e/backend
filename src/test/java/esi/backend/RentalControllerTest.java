@@ -1,8 +1,6 @@
 package esi.backend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import esi.backend.model.Car;
-import esi.backend.model.Invoice;
 import esi.backend.model.Rental;
 import esi.backend.repository.CarRepository;
 import org.junit.jupiter.api.Test;
@@ -71,10 +69,11 @@ public class RentalControllerTest {
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }
-/*
+
+
     @Test
     @WithUserDetails("manager1")
-    public void getRentalsByCustomerIdManagerTest() throws Exception {
+    public void getAllRentalsByCustomerIdManagerTest() throws Exception {
         this.mockMvc
                 .perform(MockMvcRequestBuilders
                         .get("/api/customers/1/rentals"))
@@ -84,12 +83,22 @@ public class RentalControllerTest {
 
     @Test
     @WithUserDetails("customer1")
-    public void getRentalsByCustomerIdCustomerTest() throws Exception {
+    public void getAllRentalsByCustomerIdCustomerTest() throws Exception {
         this.mockMvc
                 .perform(MockMvcRequestBuilders
                         .get("/api/customers/1/rentals"))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithUserDetails("customer2")
+    public void getAllRentalsByCustomerIdWrongCustomerTest() throws Exception {
+        this.mockMvc
+                .perform(MockMvcRequestBuilders
+                        .get("/api/customers/1/rentals"))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -112,8 +121,15 @@ public class RentalControllerTest {
                 .andExpect(status().isOk());
     }
 
- */
-
+    @Test
+    @WithUserDetails("customer2")
+    public void getRentalByCustomerIdWrongCustomerTest() throws Exception {
+        this.mockMvc
+                .perform(MockMvcRequestBuilders
+                        .get("/api/customers/1/rentals/a81bc81b-ffff-6e5d-ad75-90865d1e13b1"))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
 
     @Test
     @WithMockUser(roles = "MANAGER")
@@ -167,4 +183,3 @@ public class RentalControllerTest {
                 .andExpect(status().isForbidden());
     }
 }
-
