@@ -102,7 +102,7 @@ public class InvoiceControllerTest {
         ObjectMapper jsonMapper = new ObjectMapper();
         this.mockMvc
                 .perform(MockMvcRequestBuilders
-                        .post("/api/cars/a81bc81b-dead-4e5d-abff-90865d1e13b1/rentals/a82bc31b-dead-6a5d-ad65-90865d1e13b2/invoices")
+                        .post("/api/cars/a81bc81b-dead-4e5d-abff-90865d1e13b1/rentals/a81bc81b-dead-6e5d-ad75-90865d1e13b1/invoices")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonMapper.writeValueAsString(new Invoice())))
                 .andDo(print())
@@ -132,7 +132,7 @@ public class InvoiceControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonMapper.writeValueAsString(new Invoice())))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -158,7 +158,7 @@ public class InvoiceControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonMapper.writeValueAsString(new Invoice())))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isUnauthorized());
     }
 
 }
