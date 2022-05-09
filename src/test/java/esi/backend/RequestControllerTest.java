@@ -46,7 +46,7 @@ public class RequestControllerTest {
 
     @Test
     @WithUserDetails("manager1")
-    public void getRequestsByCarIdManagerTest() throws Exception {
+    public void getAllRequestsByCarIdManagerTest() throws Exception {
         this.mockMvc
                 .perform(MockMvcRequestBuilders
                         .get("/api/cars/a81bc81b-dead-4e5d-abff-90865d1e13b1/requests"))
@@ -56,7 +56,7 @@ public class RequestControllerTest {
 
     @Test
     @WithUserDetails("customer1")
-    public void getRequestsByCarIdCustomerTest() throws Exception {
+    public void getAllRequestsByCarIdCustomerTest() throws Exception {
         this.mockMvc
                 .perform(MockMvcRequestBuilders
                         .get("/api/cars/a81bc81b-dead-4e5d-abff-90865d1e13b1/requests"))
@@ -138,6 +138,29 @@ public class RequestControllerTest {
     }
 
     @Test
+    @WithUserDetails("customer2")
+    public void putRequestWrongCustomerTest() throws Exception {
+        ObjectMapper jsonMapper = new ObjectMapper();
+        this.mockMvc
+                .perform(MockMvcRequestBuilders
+                        .put("/api/cars/a81bc81b-dead-4e5d-abff-90865d1e13b1/requests/a82bc31b-dead-6a5d-ad65-90865d1e13b2")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonMapper.writeValueAsString(new Request())))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithUserDetails("manager1")
+    public void getRequestsByCustomerIdManagerTest() throws Exception {
+        this.mockMvc
+                .perform(MockMvcRequestBuilders
+                        .get("/api/customers/1/requests"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
     @WithUserDetails("customer1")
     public void getRequestsByCustomerIdCustomerTest() throws Exception {
         this.mockMvc
@@ -146,17 +169,6 @@ public class RequestControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
-
-    //TODO: Needed functionality is in another branch
-//    @Test
-//    @WithUserDetails("manager1")
-//    public void getRequestsByCustomerIdManagerTest() throws Exception {
-//        this.mockMvc
-//                .perform(MockMvcRequestBuilders
-//                        .get("/api/customers/1/requests"))
-//                .andDo(print())
-//                .andExpect(status().isOk());
-//    }
 
     @Test
     @WithUserDetails("customer1")

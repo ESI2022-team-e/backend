@@ -12,11 +12,13 @@ VALUES (1, 'ROLE_CUSTOMER'),
 
 INSERT INTO users(dtype, id, username, email, password)
 VALUES ('user', 1, 'customer1', 'customer1@email.com', '$2a$10$o3pbWzJM3cHq2O//i1oyduYarn6eMytd1M1bS9Buzn/27J0tFnrsS'),
-       ('user', 2, 'manager1', 'manager1@email.com', '$2a$10$ldLnBKd/8B0tjRwVxFeAO.xyi/NCBTRjmEuFQ8udAh43t6J6mX4Ua');
+       ('user', 2, 'customer2', 'customer2@email.com', '$2a$10$o3pbWzJM3cHq2O//i1oyduYarn6eMytd1M1bS9Buzn/27J0tFnrsS'),
+       ('user', 3, 'manager1', 'manager1@email.com', '$2a$10$ldLnBKd/8B0tjRwVxFeAO.xyi/NCBTRjmEuFQ8udAh43t6J6mX4Ua');
 
 INSERT INTO user_roles(user_id, role_id)
 VALUES (1, 1),
-       (2, 2);
+       (2, 1),
+       (3, 2);
 
 INSERT INTO requests(id, pickup_datetime, dropoff_datetime, pickup_location, dropoff_location, status, car_id,
                      customer_id)
