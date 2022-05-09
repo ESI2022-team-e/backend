@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -62,44 +61,51 @@ public class RequestService {
         ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser, customerId);
         if (customerResponseEntity.getBody() == null)
             return new ResponseEntity<>(customerResponseEntity.getStatusCode());
-        Request request = requestRepository.findById(requestId).orElse(null);
+        Request request = requestRepository.findRequestByIdAndCustomerId(requestId, customerId).orElse(null);
         return (request == null)
                 ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(request, HttpStatus.OK);
     }
 
     public void addRequest(UserDetails currentUser, Request request, UUID carId) {
-        Optional<Car> optionalCar = carRepository.findById(carId);
-        if (optionalCar.isPresent()) {
-            request.setCar(optionalCar.get());
-        } else throw new ResourceNotFoundException("Car with id" + carId + "not found");
-        Optional<Customer> optionalCustomer = customerRepository.findByUsername(currentUser.getUsername());
-        optionalCustomer.ifPresent(request::setCustomer);
+        Car car = carRepository.findById(carId).orElse(null);
+        if (car == null) {
+            new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return;
+        }
+        request.setCar(car);
+        customerRepository.findByUsername(currentUser.getUsername()).ifPresent(request::setCustomer);
         requestRepository.save(request);
     }
 
-    public void updateRequest(UserDetailsImpl user, Request request, UUID cardId, UUID requestId) {
-        Request req = requestRepository.findById(requestId)
+    public void updateRequest(UserDetailsImpl currentUser, Request request, UUID requestId) {
+        Request currentRequest = requestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("Request with id " + requestId + " not found"));
+        long customerId = currentRequest.getCustomer().getId();
+        ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser, customerId);
+        if (customerResponseEntity.getBody() == null) {
+            new ResponseEntity<>(customerResponseEntity.getStatusCode());
+            return;
+        }
         if (request.getPickup_datetime() != null) {
-            req.setPickup_datetime(request.getPickup_datetime());
+            currentRequest.setPickup_datetime(request.getPickup_datetime());
         }
         if (request.getDropoff_datetime() != null) {
-            req.setDropoff_datetime(request.getDropoff_datetime());
+            currentRequest.setDropoff_datetime(request.getDropoff_datetime());
         }
         if (request.getDropoff_location() != null) {
-            req.setDropoff_location(request.getDropoff_location());
+            currentRequest.setDropoff_location(request.getDropoff_location());
         }
         if (request.getStatus() != null) {
             if (request.getStatus().equals(RequestStatus.CANCELLED) || request.getStatus().equals(RequestStatus.REJECTED) || request.getStatus().equals(RequestStatus.PENDING)) {
-                req.setStatus(request.getStatus());
+                currentRequest.setStatus(request.getStatus());
             }
-            if (request.getStatus().equals(RequestStatus.ACCEPTED) && user.isManager()) {
-                req.setStatus(request.getStatus());
-                createRental(req);
+            if (request.getStatus().equals(RequestStatus.ACCEPTED) && currentUser.isManager()) {
+                currentRequest.setStatus(request.getStatus());
+                createRental(currentRequest);
             }
         }
-        requestRepository.save(req);
+        requestRepository.save(currentRequest);
     }
 
     public void deleteRequest(UUID id) {

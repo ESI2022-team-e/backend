@@ -99,7 +99,7 @@ public class RequestControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "CUSTOMER")
+    @WithUserDetails("customer1")
     public void postRequestCustomerTest() throws Exception {
         ObjectMapper jsonMapper = new ObjectMapper();
         this.mockMvc

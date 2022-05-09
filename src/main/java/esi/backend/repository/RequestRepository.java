@@ -11,4 +11,6 @@ public interface RequestRepository extends CrudRepository<Request, UUID> {
     List<Request> findByCarId(UUID carId);
 
     List<Request> findAll();
+
+    Optional<Request> findRequestByIdAndCustomerId(UUID requestId, long customerId);
 }

@@ -1,6 +1,6 @@
 package esi.backend.controller;
 
-import esi.backend.model.*;
+import esi.backend.model.Request;
 import esi.backend.security.service.UserDetailsImpl;
 import esi.backend.service.RequestService;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +50,7 @@ public class RequestController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}/requests/{requestId}")
     public ResponseEntity<?> updateRequest(@AuthenticationPrincipal final UserDetailsImpl currentUser, @RequestBody Request request, @PathVariable UUID carId, @PathVariable UUID requestId) {
-        requestService.updateRequest(currentUser, request, carId, requestId);
+        requestService.updateRequest(currentUser, request, requestId);
         return ResponseEntity.ok("Request updated successfully!");
     }
 
