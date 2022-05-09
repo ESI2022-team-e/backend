@@ -10,8 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -79,10 +79,12 @@ public class RentalService {
         Rental existingRental = rentalRepository.findRentalByIdAndCarId(rentalId,carId).orElse(null);
 
         if (existingRental == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      
         if (existingRental.getStatus().equals(RentalStatus.DONE)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         if (rental.getPickupDatetime() != null || rental.getDropoffDatetime() != null)
             existingRental = extendRental(rental, existingRental);
+      
         if (existingRental == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         if (rental.getPickupLocation() != null)

@@ -13,9 +13,13 @@ public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+
     private LocalDateTime pickupDatetime;
+
     private LocalDateTime dropoffDatetime;
+
     private String pickupLocation;
+
     private String dropoffLocation;
 
     private RequestStatus status;

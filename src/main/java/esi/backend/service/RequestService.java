@@ -21,12 +21,16 @@ public class RequestService {
 
     @Autowired
     private RequestRepository requestRepository;
+  
     @Autowired
     private RentalRepository rentalRepository;
+  
     @Autowired
     private CarRepository carRepository;
+  
     @Autowired
     private CustomerRepository customerRepository;
+  
     @Autowired
     private CustomerService customerService;
 
@@ -86,7 +90,6 @@ public class RequestService {
         if (customerResponseEntity.getBody() == null) {
             return new ResponseEntity<>(customerResponseEntity.getStatusCode());
         }
-
         if (newData.getPickupDatetime() != null) {
             request.setPickupDatetime(newData.getPickupDatetime());
         }
