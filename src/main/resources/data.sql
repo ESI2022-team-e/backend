@@ -25,6 +25,15 @@ VALUES
 ('a81bc81b-dead-6e5d-ad75-90865d1e13b1', '2022-01-10T17:09:42.411', '2022-01-10T17:09:42.411', 'Lõunakeskus','Kesklinn', 1, 'a81bc81b-dead-4e5d-abff-90865d1e13b1', 1),
 ('b1be0e15-f7c7-4133-9e68-1aa8aed6a03a', '2022-04-12T17:09:42.411', '2022-04-17T17:09:42.411', 'Delta','Maarjamõisa', 2, 'a81bc81b-dead-4e5d-abff-90865d1e13b1', 1);
 
+INSERT INTO rentals (id, pickup_datetime, dropoff_datetime, pickup_location, dropoff_location, status, car_id,
+                     customer_id)
+VALUES ('a81bc81b-ffff-6e5d-ad75-90865d1e13b1', '2022-03-18T17:09:42.411', '2022-03-20T17:09:42.411', 'Riia',
+        'Anne', 1, 'a81bc81b-dead-4e5d-abff-90865d1e13b1', 1);
+
 INSERT INTO invoices (id, date, status, rental_id, customer_id)
 VALUES ('dd06ca3f-613e-49c2-ae62-ab9d3f455194', '2022-05-05T17:19:23.411', 0, 'b1be0e15-f7c7-4133-9e68-1aa8aed6a03a',1);
+
+INSERT INTO invoices (id, date, status, rental_id, customer_id)
+VALUES ('dd06ca3f-614e-49c2-ae62-ab9d3f455194', '2022-03-18T17:09:42.411', 0, 'a81bc81b-ffff-6e5d-ad75-90865d1e13b1',
+        1);
 

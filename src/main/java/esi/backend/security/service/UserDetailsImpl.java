@@ -1,6 +1,7 @@
 package esi.backend.security.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import esi.backend.model.ERole;
 import esi.backend.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,6 +13,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
+
     private static final long serialVersionUID = 1L;
 
     private Long id;
@@ -98,5 +100,13 @@ public class UserDetailsImpl implements UserDetails {
             return false;
         UserDetailsImpl user = (UserDetailsImpl) o;
         return Objects.equals(id, user.id);
+    }
+
+    public boolean isManager() {
+        return this.authorities.contains(new SimpleGrantedAuthority(ERole.ROLE_MANAGER.name()));
+    }
+
+    public boolean isCustomer(){
+        return this.authorities.contains(new SimpleGrantedAuthority(ERole.ROLE_CUSTOMER.name()));
     }
 }

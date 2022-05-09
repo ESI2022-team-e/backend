@@ -1,11 +1,11 @@
 package esi.backend.controller;
 
 import esi.backend.model.Request;
+import esi.backend.security.service.UserDetailsImpl;
 import esi.backend.service.RequestService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +17,7 @@ import java.util.UUID;
 public class RequestController {
 
     private final RequestService requestService;
+
 
     public RequestController(RequestService requestService) {
         this.requestService = requestService;
@@ -42,14 +43,14 @@ public class RequestController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/cars/{carId}/requests")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<?> addRequest(@AuthenticationPrincipal final UserDetails currentUser, @RequestBody Request request, @PathVariable UUID carId) {
+    public ResponseEntity<?> addRequest(@AuthenticationPrincipal final UserDetailsImpl currentUser, @RequestBody Request request, @PathVariable UUID carId) {
         requestService.addRequest(currentUser, request, carId);
         return ResponseEntity.ok("Request added successfully!");
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}/requests/{requestId}")
-    public ResponseEntity<?> updateRequest(@AuthenticationPrincipal final UserDetails currentUser, @RequestBody Request request, @PathVariable UUID carId, @PathVariable UUID requestId) {
-        requestService.updateRequest(currentUser, request, carId,requestId);
+    public ResponseEntity<?> updateRequest(@AuthenticationPrincipal final UserDetailsImpl currentUser, @RequestBody Request request, @PathVariable UUID carId, @PathVariable UUID requestId) {
+        requestService.updateRequest(currentUser, request, requestId);
         return ResponseEntity.ok("Request updated successfully!");
     }
 
@@ -60,8 +61,19 @@ public class RequestController {
     }
 
     @GetMapping("/customers/{customerId}/requests")
-    @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<List<Request>> getCustomerRequests(@AuthenticationPrincipal final UserDetails currentUser, @PathVariable Long customerId) {
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('MANAGER')")
+    public ResponseEntity<List<Request>> getCustomerRequests(
+            @AuthenticationPrincipal final UserDetailsImpl currentUser,
+            @PathVariable Long customerId) {
         return requestService.getAllRequestsByCustomerId(currentUser, customerId);
+    }
+
+    @GetMapping("/customers/{customerId}/requests/{requestId}")
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('MANAGER')")
+    public ResponseEntity<Request> getCustomerRequest(
+            @AuthenticationPrincipal final UserDetailsImpl currentUser,
+            @PathVariable long customerId,
+            @PathVariable UUID requestId) {
+        return requestService.getRequestByCustomerId(currentUser, customerId, requestId);
     }
 }

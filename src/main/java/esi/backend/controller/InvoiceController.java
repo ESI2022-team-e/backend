@@ -22,24 +22,25 @@ public class InvoiceController {
         this.invoiceService = invoiceService;
     }
 
-    @RequestMapping("invoices/{invoiceId}")
+    @RequestMapping("/invoices/{invoiceId}")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Invoice> getInvoice(@PathVariable UUID invoiceId) {
         return invoiceService.getInvoice(invoiceId);
     }
 
-    @RequestMapping("invoices")
+    @RequestMapping("/invoices")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<List<Invoice>> getAllInvoices() {
         return invoiceService.getAllInvoices();
     }
 
-    @RequestMapping("customers/{customerId}/rentals/{rentalId}/invoices/{invoiceId}")
+    @RequestMapping("/customers/{customerId}/rentals/{rentalId}/invoices/{invoiceId}")
     public ResponseEntity<Invoice> getInvoiceByRentalId(@AuthenticationPrincipal final UserDetailsImpl currentUser, @PathVariable UUID rentalId) {
         return invoiceService.getInvoiceByRentalId(currentUser, rentalId);
     }
 
-    @RequestMapping("customers/{customerId}/invoices")
+
+    @RequestMapping("/customers/{customerId}/invoices")
     public ResponseEntity<List<Invoice>> getAllInvoicesByCustomerId(@AuthenticationPrincipal final UserDetailsImpl currentUser, @PathVariable long customerId) {
         return invoiceService.getAllInvoicesByCustomerId(currentUser, customerId);
     }
@@ -53,6 +54,7 @@ public class InvoiceController {
     @RequestMapping(method = RequestMethod.PUT, value = "/customers/{customerId}/rentals/{rentalId}/invoices/{invoiceId}")
     public ResponseEntity<?> updateInvoice(@AuthenticationPrincipal final UserDetailsImpl currentUser, @PathVariable UUID invoiceId, @RequestBody Invoice invoice) {
         return invoiceService.updateInvoice(currentUser, invoiceId, invoice);
+
     }
 
 }
