@@ -14,7 +14,7 @@ The source code of Enterprise System Integration 2022 spring project of Team E:
 For the first time:
 
 1. Clone the project
-2. Make a Postgres database named "project" in your computer (for example following the steps below)
+2. Make a Postgres database named "project" on your computer (for example, following the steps below)
     * Open pgAdmin
     * From the left column, right-click on “Databases”
     * Click “create”
@@ -28,4 +28,10 @@ For the first time:
 
 Try it out:
 
-* Open http://localhost:8080/api/cars in the browser (should show the list of cars)
+* Open http://localhost:8080/api/cars in the browser (it should show the list of cars)
+
+## Deployment
+
+The project is deployed at: https://esi-2022-backend.herokuapp.com/.
+
+The same `/api/cars` API can be tested out on https://esi-2022-backend.herokuapp.com/api/cars.
