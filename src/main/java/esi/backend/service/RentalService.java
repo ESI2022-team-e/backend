@@ -11,6 +11,7 @@ import esi.backend.repository.RentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -84,10 +85,13 @@ public class RentalService {
     }
 
     public void createInvoice(Rental rental) {
+        double daily_cost = rental.getCar().getDaily_cost();
+        long days = Duration.between(rental.getPickup_datetime(), rental.getDropoff_datetime()).toDays();
         Invoice invoice = new Invoice(
                 rental.getId(),
                 rental.getPickup_datetime(),
                 InvoiceStatus.UNPAID,
+                days * daily_cost,
                 rental,
                 rental.getCustomer()
         );

@@ -18,6 +18,8 @@ public class Invoice {
 
     private InvoiceStatus status;
 
+    private double price;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "rental_id", referencedColumnName = "id")
     private Rental rental;
@@ -30,10 +32,11 @@ public class Invoice {
     public Invoice() {
     }
 
-    public Invoice(UUID id, LocalDateTime date, InvoiceStatus status, Rental rental, Customer customer) {
+    public Invoice(UUID id, LocalDateTime date, InvoiceStatus status, double price, Rental rental, Customer customer) {
         this.id = id;
         this.date = date;
         this.status = status;
+        this.price = price;
         this.rental = rental;
         this.customer = customer;
     }
@@ -60,6 +63,14 @@ public class Invoice {
 
     public void setStatus(InvoiceStatus status) {
         this.status = status;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public Rental getRental() {

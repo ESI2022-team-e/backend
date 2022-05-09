@@ -40,11 +40,11 @@ INSERT INTO rentals (id, pickup_datetime, dropoff_datetime, pickup_location, dro
 VALUES ('a81bc81b-ffff-6e5d-ad75-90865d1e13b1', '2022-03-18T17:09:42.411', '2022-03-20T17:09:42.411', 'Riia',
         'Anne', 1, 'a81bc81b-dead-4e5d-abff-90865d1e13b1', 1);
 
-INSERT INTO invoices (id, date, status, rental_id, customer_id)
-VALUES ('dd06ca3f-613e-49c2-ae62-ab9d3f455194', '2022-05-05T17:19:23.411', 0, 'a81bc81b-abcd-6e5d-ad75-90865d1e13b1',
+INSERT INTO invoices (id, date, status, price, rental_id, customer_id)
+VALUES ('dd06ca3f-613e-49c2-ae62-ab9d3f455194', '2022-05-05T17:19:23.411', 0, 450.0, 'a81bc81b-abcd-6e5d-ad75-90865d1e13b1',
         2);
 
-INSERT INTO invoices (id, date, status, rental_id, customer_id)
-VALUES ('dd06ca3f-614e-49c2-ae62-ab9d3f455194', '2022-03-18T17:09:42.411', 0, 'a81bc81b-ffff-6e5d-ad75-90865d1e13b1',
+INSERT INTO invoices (id, date, status, price, rental_id, customer_id)
+VALUES ('dd06ca3f-614e-49c2-ae62-ab9d3f455194', '2022-03-18T17:09:42.411', 0, 645.2, 'a81bc81b-ffff-6e5d-ad75-90865d1e13b1',
         1);
 
