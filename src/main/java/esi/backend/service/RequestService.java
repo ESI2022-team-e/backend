@@ -1,6 +1,5 @@
 package esi.backend.service;
 
-import esi.backend.exception.ResourceNotFoundException;
 import esi.backend.model.*;
 import esi.backend.repository.CarRepository;
 import esi.backend.repository.CustomerRepository;
@@ -78,38 +77,43 @@ public class RequestService {
         requestRepository.save(request);
     }
 
-    public void updateRequest(UserDetailsImpl currentUser, Request request, UUID requestId) {
-        Request currentRequest = requestRepository.findById(requestId)
-                .orElseThrow(() -> new ResourceNotFoundException("Request with id " + requestId + " not found"));
-        long customerId = currentRequest.getCustomer().getId();
+    public ResponseEntity<?> updateRequest(UserDetailsImpl currentUser, Request newData, UUID requestId) {
+        Request request = requestRepository.findById(requestId).orElse(null);
+        if (request == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        long customerId = request.getCustomer().getId();
         ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser, customerId);
         if (customerResponseEntity.getBody() == null) {
-            new ResponseEntity<>(customerResponseEntity.getStatusCode());
-            return;
+            return new ResponseEntity<>(customerResponseEntity.getStatusCode());
         }
-        if (request.getPickupDatetime() != null) {
-            currentRequest.setPickupDatetime(request.getPickupDatetime());
+
+        if (newData.getPickupDatetime() != null) {
+            request.setPickupDatetime(newData.getPickupDatetime());
         }
-        if (request.getDropoffDatetime() != null) {
-            currentRequest.setDropoffDatetime(request.getDropoffDatetime());
+        if (newData.getDropoffDatetime() != null) {
+            request.setDropoffDatetime(newData.getDropoffDatetime());
         }
-        if (request.getDropoffLocation() != null) {
-            currentRequest.setDropoffLocation(request.getDropoffLocation());
+        if (newData.getDropoffLocation() != null) {
+            request.setDropoffLocation(newData.getDropoffLocation());
         }
-        if (request.getStatus() != null) {
-            if (request.getStatus().equals(RequestStatus.CANCELLED) || request.getStatus().equals(RequestStatus.REJECTED) || request.getStatus().equals(RequestStatus.PENDING)) {
-                currentRequest.setStatus(request.getStatus());
+        if (newData.getStatus() != null) {
+            if (newData.getStatus().equals(RequestStatus.CANCELLED) || newData.getStatus().equals(RequestStatus.REJECTED) || newData.getStatus().equals(RequestStatus.PENDING)) {
+                request.setStatus(newData.getStatus());
             }
-            if (request.getStatus().equals(RequestStatus.ACCEPTED) && currentUser.isManager()) {
-                currentRequest.setStatus(request.getStatus());
-                createRental(currentRequest);
+            if (newData.getStatus().equals(RequestStatus.ACCEPTED) && currentUser.isManager()) {
+                request.setStatus(newData.getStatus());
+                createRental(request);
+                requestRepository.save(request);
+                return ResponseEntity.ok("Request updated successfully and new rental created!");
             }
         }
-        requestRepository.save(currentRequest);
+        requestRepository.save(request);
+        return ResponseEntity.ok("Request updated successfully!");
     }
 
-    public void deleteRequest(UUID id) {
+    public ResponseEntity<?> deleteRequest(UUID id) {
         requestRepository.deleteById(id);
+        return ResponseEntity.ok("Request deleted successfully!");
     }
 
 

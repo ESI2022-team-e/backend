@@ -1,21 +1,18 @@
 package esi.backend.service;
 
 import esi.backend.model.*;
-import esi.backend.payload.response.MessageResponse;
 import esi.backend.repository.CarRepository;
-import esi.backend.repository.CustomerRepository;
 import esi.backend.repository.InvoiceRepository;
 import esi.backend.repository.RentalRepository;
 import esi.backend.security.service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.time.Duration;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -123,10 +120,13 @@ public class RentalService {
 
 
     public void createInvoice(Rental rental) {
+        double daily_cost = rental.getCar().getDaily_cost();
+        long days = Duration.between(rental.getPickupDatetime(), rental.getDropoffDatetime()).toDays();
         Invoice invoice = new Invoice(
                 rental.getId(),
                 rental.getPickupDatetime(),
                 InvoiceStatus.UNPAID,
+                days * daily_cost,
                 rental,
                 rental.getCustomer()
         );

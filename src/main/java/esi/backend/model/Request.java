@@ -17,7 +17,9 @@ public class Request {
     private LocalDateTime dropoffDatetime;
     private String pickupLocation;
     private String dropoffLocation;
+
     private RequestStatus status;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "car_id")
     @JsonIgnore
