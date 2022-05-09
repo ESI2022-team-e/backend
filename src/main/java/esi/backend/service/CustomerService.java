@@ -28,4 +28,12 @@ public class CustomerService {
                 ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(customer, HttpStatus.OK);
     }
+
+    public ResponseEntity<Customer> authenticateCustomer(UserDetailsImpl currentUser, long customerId) {
+        Customer customer = customerRepository.findById(customerId).orElse(null);
+        if (customer == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (!currentUser.isManager() && !currentUser.getId().equals(customer.getId()))
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(customer, HttpStatus.OK);
+    }
 }

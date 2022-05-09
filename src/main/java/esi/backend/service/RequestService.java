@@ -29,6 +29,8 @@ public class RequestService {
     private CarRepository carRepository;
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private CustomerService customerService;
 
     public ResponseEntity<List<Request>> getAllRequests() {
         return new ResponseEntity<>(requestRepository.findAll(), HttpStatus.OK);
@@ -49,7 +51,7 @@ public class RequestService {
     }
 
     public ResponseEntity<List<Request>> getAllRequestsByCustomerId(UserDetailsImpl currentUser, long customerId) {
-        ResponseEntity<Customer> customerResponseEntity = authenticateCustomer(currentUser, customerId);
+        ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser, customerId);
         if (customerResponseEntity.getBody() == null)
             return new ResponseEntity<>(customerResponseEntity.getStatusCode());
         List<Request> requests = new ArrayList<>(customerResponseEntity.getBody().getRequests());
@@ -57,11 +59,10 @@ public class RequestService {
     }
 
     public ResponseEntity<Request> getRequestByCustomerId(UserDetailsImpl currentUser, long customerId, UUID requestId) {
-        ResponseEntity<Customer> customerResponseEntity = authenticateCustomer(currentUser, customerId);
+        ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser, customerId);
         if (customerResponseEntity.getBody() == null)
             return new ResponseEntity<>(customerResponseEntity.getStatusCode());
-        Request request = customerResponseEntity.getBody().getRequests().stream().filter(
-                req -> req.getId().equals(requestId)).findFirst().orElse(null);
+        Request request = requestRepository.findById(requestId).orElse(null);
         return (request == null)
                 ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(request, HttpStatus.OK);
@@ -111,11 +112,5 @@ public class RequestService {
         rentalRepository.save(rental);
     }
 
-    public ResponseEntity<Customer> authenticateCustomer(UserDetailsImpl currentUser, long customerId) {
-        Customer customer = customerRepository.findById(customerId).orElse(null);
-        if (customer == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        if (!currentUser.isManager() && !currentUser.getId().equals(customer.getId()))
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        return new ResponseEntity<>(customer, HttpStatus.OK);
-    }
+
 }
