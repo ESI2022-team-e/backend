@@ -74,7 +74,7 @@ public class RequestService {
             return;
         }
         request.setCar(car);
-        customerRepository.findByUsername(currentUser.getUsername()).ifPresent(request::setCustomer);
+        customerRepository.findCustomerByUsername(currentUser.getUsername()).ifPresent(request::setCustomer);
         requestRepository.save(request);
     }
 

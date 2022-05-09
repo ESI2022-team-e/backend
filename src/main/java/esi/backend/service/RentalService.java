@@ -111,7 +111,10 @@ public class RentalService {
 
     private Rental extendRental(Rental rental, Rental existingRental){
         if (rental.getDropoffDatetime() != null) existingRental.setDropoffDatetime(rental.getDropoffDatetime());
-        if (rental.getPickupDatetime() != null) existingRental.setPickupDatetime(rental.getPickupDatetime());
+        if (rental.getPickupDatetime() != null) {
+            if (existingRental.getStatus().equals(RentalStatus.UPCOMING))
+                existingRental.setPickupDatetime(rental.getPickupDatetime());
+        }
         return rentalRepository.getRentalByPickupDatetimeBeforeAndDropoffDatetimeAfter(
                 existingRental.getDropoffDatetime(),existingRental.getPickupDatetime()).isEmpty()
                 ? existingRental

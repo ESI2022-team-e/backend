@@ -61,7 +61,7 @@ public class RentalControllerTest {
                 .perform(MockMvcRequestBuilders
                         .get("/api/cars/a81bc81b-dead-4e5d-abff-90865d1e13b1/rentals/a81bc81b-dead-6e5d-ad75-90865d1e13b1"))
                 .andDo(print())
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -71,7 +71,7 @@ public class RentalControllerTest {
                 .perform(MockMvcRequestBuilders
                         .get("/api/cars/a81bc81b-dead-4e5d-abff-90865d1e13b1/rentals/a81bc81b-dead-6e5d-ad75-90865d1e13b1"))
                 .andDo(print())
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
 
@@ -96,11 +96,11 @@ public class RentalControllerTest {
     }
 
     @Test
-    @WithUserDetails("customer1")
+    @WithUserDetails("customer2")
     public void getAllRentalsByCustomerIdWrongCustomerTest() throws Exception {
         this.mockMvc
                 .perform(MockMvcRequestBuilders
-                        .get("/api/customers/2/rentals"))
+                        .get("/api/customers/1/rentals"))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
@@ -132,7 +132,7 @@ public class RentalControllerTest {
                 .perform(MockMvcRequestBuilders
                         .get("/api/customers/1/rentals/a81bc81b-ffff-6e5d-ad75-90865d1e13b1"))
                 .andDo(print())
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
