@@ -67,7 +67,7 @@ public class InvoiceService {
         // only allow one invoice per rental
         boolean invoiceExisting = invoiceRepository.findByRentalId(rentalId).isPresent();
         if (invoiceExisting) {
-            return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         invoice.setRental(rental);
         invoice.setCustomer(rental.getCustomer());
