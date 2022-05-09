@@ -1,9 +1,6 @@
 package esi.backend.service;
 
-import esi.backend.model.Car;
-import esi.backend.model.Invoice;
-import esi.backend.model.InvoiceStatus;
-import esi.backend.model.Rental;
+import esi.backend.model.*;
 import esi.backend.repository.CarRepository;
 import esi.backend.repository.CustomerRepository;
 import esi.backend.repository.InvoiceRepository;
@@ -52,30 +49,34 @@ public class RentalService {
 
     public void addRental(Rental rental) {
         rentalRepository.save(rental);
-        createInvoice(rental);
     }
 
     public void updateRental(Rental rental, UUID carId, UUID rentalId) {
         Optional<Car> car = carRepository.findById(carId);
-        Rental existingRental = rentalRepository.findById(rentalId).get();
+        Rental existingRental = rentalRepository.findById(rentalId).orElse(null);
 
-        if (rental.getStatus() != null)
-            existingRental.setStatus(rental.getStatus());
+        if (existingRental != null) {
+            if (rental.getStatus() != null) {
+                existingRental.setStatus(rental.getStatus());
+                if (rental.getStatus().equals(RentalStatus.DONE))
+                    createInvoice(rental);
+            }
 
-        if (rental.getCar() != null && car.isPresent())
-            existingRental.setCar(car.get());
+            if (rental.getCar() != null && car.isPresent())
+                existingRental.setCar(car.get());
 
-        if (rental.getPickup_location() != null)
-            existingRental.setPickup_location(rental.getPickup_location());
+            if (rental.getPickup_location() != null)
+                existingRental.setPickup_location(rental.getPickup_location());
 
-        if (rental.getPickup_datetime() != null)
-            existingRental.setPickup_datetime(rental.getPickup_datetime());
+            if (rental.getPickup_datetime() != null)
+                existingRental.setPickup_datetime(rental.getPickup_datetime());
 
-        if (rental.getDropoff_location() != null)
-            existingRental.setDropoff_location(rental.getDropoff_location());
+            if (rental.getDropoff_location() != null)
+                existingRental.setDropoff_location(rental.getDropoff_location());
 
-        if (rental.getDropoff_datetime() != null)
-            existingRental.setDropoff_datetime(rental.getDropoff_datetime());
+            if (rental.getDropoff_datetime() != null)
+                existingRental.setDropoff_datetime(rental.getDropoff_datetime());
+        }
 
         rentalRepository.save(rental);
     }
