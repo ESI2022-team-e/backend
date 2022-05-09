@@ -13,8 +13,6 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.UUID;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -61,23 +59,13 @@ public class RentalControllerTest {
     }
 
     @Test
-    @WithUserDetails("customer1")
+    @WithMockUser(roles = "CUSTOMER")
     public void getRentalCustomerTest() throws Exception {
         this.mockMvc
                 .perform(MockMvcRequestBuilders
                         .get("/api/cars/a81bc81b-dead-4e5d-abff-90865d1e13b1/rentals/a81bc81b-dead-6e5d-ad75-90865d1e13b1"))
                 .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @WithUserDetails("customer2")
-    public void getRentalWrongCustomerTest() throws Exception {
-        this.mockMvc
-                .perform(MockMvcRequestBuilders
-                        .get("/api/cars/a81bc81b-dead-4e5d-abff-90865d1e13b1/rentals/a81bc81b-dead-6e5d-ad75-90865d1e13b1"))
-                .andDo(print())
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isForbidden());
     }
 
 
@@ -193,4 +181,3 @@ public class RentalControllerTest {
                 .andExpect(status().isForbidden());
     }
 }
-
