@@ -73,7 +73,6 @@ public class InvoiceService {
         invoice.setCustomer(rental.getCustomer());
         invoiceRepository.save(invoice);
         return ResponseEntity.ok("Invoice added successfully!");
-
     }
 
     public ResponseEntity<?> updateInvoice(UserDetailsImpl currentUser, UUID invoiceId, Invoice newInvoice) {
