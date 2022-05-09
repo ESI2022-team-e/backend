@@ -120,11 +120,15 @@ public class AuthController {
         String userType;
         // Create new user's account
         if (!roles.contains((roleRepository.findByName(ERole.ROLE_MANAGER)).get())) {
-            Customer customer = new Customer();
-            customer.setEmail(signUpRequest.getEmail());
-            customer.setPassword(encoder.encode(signUpRequest.getPassword()));
-            customer.setUsername(signUpRequest.getUsername());
-            customer.setRoles(roles);
+            Customer customer = new Customer(signUpRequest.getUsername(),
+                    signUpRequest.getEmail(),
+                    encoder.encode(signUpRequest.getPassword()),
+                    signUpRequest.getFirstName(),
+                    signUpRequest.getLastName(),
+                    signUpRequest.getDateOfBirth(),
+                    signUpRequest.getDriversLicenseNumber(),
+                    signUpRequest.getWorkingPermitNumber(),
+                    signUpRequest.getIdentificationDocumentNumber());
             customerRepository.save(customer);
             userType = "Customer";
         } else {

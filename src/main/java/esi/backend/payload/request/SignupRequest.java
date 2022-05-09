@@ -3,6 +3,7 @@ package esi.backend.payload.request;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.Set;
 
 public class SignupRequest {
@@ -20,6 +21,61 @@ public class SignupRequest {
     @NotBlank
     @Size(min = 6, max = 40)
     private String password;
+
+    private String firstName;
+    private String lastName;
+    private LocalDate dateOfBirth;
+    private String driversLicenseNumber;
+    private String workingPermitNumber;
+    private String identificationDocumentNumber;
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getDriversLicenseNumber() {
+        return driversLicenseNumber;
+    }
+
+    public void setDriversLicenseNumber(String driversLicenseNumber) {
+        this.driversLicenseNumber = driversLicenseNumber;
+    }
+
+    public String getWorkingPermitNumber() {
+        return workingPermitNumber;
+    }
+
+    public void setWorkingPermitNumber(String workingPermitNumber) {
+        this.workingPermitNumber = workingPermitNumber;
+    }
+
+    public String getIdentificationDocumentNumber() {
+        return identificationDocumentNumber;
+    }
+
+    public void setIdentificationDocumentNumber(String identificationDocumentNumber) {
+        this.identificationDocumentNumber = identificationDocumentNumber;
+    }
 
     public String getUsername() {
         return username;

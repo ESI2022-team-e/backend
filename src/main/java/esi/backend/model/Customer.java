@@ -29,6 +29,18 @@ public class Customer extends User {
     @JsonIgnore
     private Set<Invoice> invoices = new HashSet<>();
 
+    public Customer() {
+    }
+
+    public Customer(String username, String email, String password, String firstName, String lastName, LocalDate dateOfBirth, String driversLicenseNumber, String workingPermitNumber, String identificationDocumentNumber) {
+        super(username, email, password);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+        this.driversLicenseNumber = driversLicenseNumber;
+        this.workingPermitNumber = workingPermitNumber;
+        this.identificationDocumentNumber = identificationDocumentNumber;
+    }
 
     public String getFirstName() {
         return firstName;
