@@ -1,278 +1,1058 @@
 {
-  "info": {
-    "_postman_id": "83e6b1b2-72cf-4657-9ad1-c4dbc0b31914",
-    "name": "ESI 2022 Project",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "item": [
-    {
-      "name": "CarController",
-      "item": [
-        {
-          "name": "Get all cars",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "localhost:8081/api/cars",
-              "host": [
-                "localhost"
-              ],
-              "port": "8081",
-              "path": [
-                "api",
-                "cars"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete a car",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "localhost:8081/api/cars/a40f9cd3-b0bf-4aaa-948c-2385a0aa193c",
-              "host": [
-                "localhost"
-              ],
-              "port": "8081",
-              "path": [
-                "api",
-                "cars",
-                "a40f9cd3-b0bf-4aaa-948c-2385a0aa193c"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update car information",
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"daily_cost\": 43.0\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "localhost:8081/api/cars/cf9dc27d-5fa6-4f92-bb72-a59cb92f01f3",
-              "host": [
-                "localhost"
-              ],
-              "port": "8081",
-              "path": [
-                "api",
-                "cars",
-                "cf9dc27d-5fa6-4f92-bb72-a59cb92f01f3"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Add a car",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"mark\": \"Mazda\",\r\n    \"model\": \"3\",\r\n    \"nr_of_seats\": 5,\r\n    \"transmission_type\": \"manual\",\r\n    \"fuel_type\": \"diesel\",\r\n    \"daily_cost\": 45.0,\r\n    \"year\": 2016,\r\n    \"licence_plate\": \"ABC123\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "localhost:8081/api/cars",
-              "host": [
-                "localhost"
-              ],
-              "port": "8081",
-              "path": [
-                "api",
-                "cars"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get a car",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "localhost:8081/api/cars/cf9dc27d-5fa6-4f92-bb72-a59cb92f01f3",
-              "host": [
-                "localhost"
-              ],
-              "port": "8081",
-              "path": [
-                "api",
-                "cars",
-                "cf9dc27d-5fa6-4f92-bb72-a59cb92f01f3"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "RequestController",
-      "item": [
-        {
-          "name": "Add request",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"pickupDatetime\": \"2022-01-10T17:09:42.411\",\r\n    \"dropoffDatetime\": \"2022-01-13T17:09:42.411\",\r\n    \"pickupLocation\": \"Turu tn 5\",\r\n    \"dropoffLocation\": \"Delta\",\r\n    \"status\": \"PENDING\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "localhost:8081/api/cars/cf9dc27d-5fa6-4f92-bb72-a59cb92f01f3/requests",
-              "host": [
-                "localhost"
-              ],
-              "port": "8081",
-              "path": [
-                "api",
-                "cars",
-                "cf9dc27d-5fa6-4f92-bb72-a59cb92f01f3",
-                "requests"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Requests",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "localhost:8081/api/cars/a81bc81b-dead-4e5d-abff-90865d1e13b1/requests",
-              "host": [
-                "localhost"
-              ],
-              "port": "8081",
-              "path": [
-                "api",
-                "cars",
-                "a81bc81b-dead-4e5d-abff-90865d1e13b1",
-                "requests"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get a request",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "localhost:8081/api/cars/requests/9c91ba96-7b45-42b7-936f-01e298c29ea7",
-              "host": [
-                "localhost"
-              ],
-              "port": "8081",
-              "path": [
-                "api",
-                "cars",
-                "requests",
-                "9c91ba96-7b45-42b7-936f-01e298c29ea7"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Change request's status",
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"status\": \"ACCEPTED\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "localhost:8081/api/cars/cf9dc27d-5fa6-4f92-bb72-a59cb92f01f3/requests/983ea2e1-8ab6-4f2d-9281-8a090fecf4db",
-              "host": [
-                "localhost"
-              ],
-              "port": "8081",
-              "path": [
-                "api",
-                "cars",
-                "cf9dc27d-5fa6-4f92-bb72-a59cb92f01f3",
-                "requests",
-                "983ea2e1-8ab6-4f2d-9281-8a090fecf4db"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete request",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "localhost:8081/api/cars/requests/331c7ea3-474f-4e37-a1c0-f5eb19efb1dd",
-              "host": [
-                "localhost"
-              ],
-              "port": "8081",
-              "path": [
-                "api",
-                "cars",
-                "requests",
-                "331c7ea3-474f-4e37-a1c0-f5eb19efb1dd"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get all requests",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "localhost:8081/api/requests",
-              "host": [
-                "localhost"
-              ],
-              "port": "8081",
-              "path": [
-                "api",
-                "requests"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    }
-  ]
+	"info": {
+		"_postman_id": "18d070fd-35fd-4094-aea0-e472965828a2",
+		"name": "ESI project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CarController",
+			"item": [
+				{
+					"name": "Create a car",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjdXN0b21lciIsImlhdCI6MTY1MTMzODgxNywiZXhwIjoxNjUxNDI1MjE3fQ.h3r6mPS-rLkitnrvD3EcDErDR7bjpW_SO3fVzbzHE8160iNYvVg8zlF-EeCc4aDBLv1znkkCijMSKD-awNoObw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"a81bc81b-dead-4e5d-abbf-90865d1e13b2\",\r\n    \"mark\": \"Ford\",\r\n    \"model\": \"Focus 1.6 Man\",\r\n    \"nr_of_seats\": 5,\r\n    \"transmission_type\": \"Manual\",\r\n    \"fuel_type\": \"Petrol\",\r\n    \"daily_cost\": 60,\r\n    \"year\" : 2000,\r\n    \"licence_plate\": \"123 DEF\" \r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/cars",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a car",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjdXN0b21lciIsImlhdCI6MTY1MTMzODgxNywiZXhwIjoxNjUxNDI1MjE3fQ.h3r6mPS-rLkitnrvD3EcDErDR7bjpW_SO3fVzbzHE8160iNYvVg8zlF-EeCc4aDBLv1znkkCijMSKD-awNoObw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/cars/a81bc81b-dead-4e5d-abdd-90865d1e13b1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars",
+								"a81bc81b-dead-4e5d-abdd-90865d1e13b1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Access a car with carId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjdXN0b21lciIsImlhdCI6MTY1MTMzODgxNywiZXhwIjoxNjUxNDI1MjE3fQ.h3r6mPS-rLkitnrvD3EcDErDR7bjpW_SO3fVzbzHE8160iNYvVg8zlF-EeCc4aDBLv1znkkCijMSKD-awNoObw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/cars/a81bc81b-dead-4e5d-abff-90865d1e13b1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars",
+								"a81bc81b-dead-4e5d-abff-90865d1e13b1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Access cars with bearer token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjdXN0b21lciIsImlhdCI6MTY1MTMzODgxNywiZXhwIjoxNjUxNDI1MjE3fQ.h3r6mPS-rLkitnrvD3EcDErDR7bjpW_SO3fVzbzHE8160iNYvVg8zlF-EeCc4aDBLv1znkkCijMSKD-awNoObw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/cars",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify a car",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYW5hZ2VyIiwiaWF0IjoxNjUxMzM3Nzg4LCJleHAiOjE2NTE0MjQxODh9.3FIfVuWaWVfp36Mqo6vn4MSJb7Dau0BB2nuSAq0jeNUZ-TvHGkbf0cC-KPOAumSce7AhJjoyoiM6adJrKcRuxw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"a81bc81b-dead-4e5d-abbf-90865d1e13b1\",\r\n    \"mark\": \"Ford\",\r\n    \"model\": \"Focus 1.6 Man\",\r\n    \"nr_of_seats\": 5,\r\n    \"transmission_type\": \"Manual\",\r\n    \"fuel_type\": \"Petrol\",\r\n    \"daily_cost\": 70,\r\n    \"year\" : 2000,\r\n    \"licence_plate\": \"123 DEF\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/cars/a81bc81b-dead-4e5d-abbf-90865d1e13b1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars",
+								"a81bc81b-dead-4e5d-abbf-90865d1e13b1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a car",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/api/cars/cf9dc27d-5fa6-4f92-bb72-a59cb92f01f3",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars",
+								"cf9dc27d-5fa6-4f92-bb72-a59cb92f01f3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all cars",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/api/cars",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all cars in given time period",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/api/cars?startTime=2022-05-08T20:25:59&endTime=2022-05-15T20:25:59",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars"
+							],
+							"query": [
+								{
+									"key": "startTime",
+									"value": "2022-05-08T20:25:59"
+								},
+								{
+									"key": "endTime",
+									"value": "2022-05-15T20:25:59"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "RequestController",
+			"item": [
+				{
+					"name": "Add request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjdXN0b21lcjIiLCJpYXQiOjE2NTE4NjE1NjksImV4cCI6MTY1MTk0Nzk2OX0.knPrLMSPA6JYSU_dvfGL91OwWei4vCCAU97zk4v3TjR45wFP1Z7_lJXgRb8dJnKIdGCGYHK0EIH3D5LU78R2Yw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"pickup_datetime\": \"2022-01-10T17:09:42.411\",\r\n    \"dropoff_datetime\": \"2022-01-13T17:09:42.411\",\r\n    \"pickup_location\": \"Turu tn 5\",\r\n    \"dropoff_location\": \"Delta\",\r\n    \"status\": \"PENDING\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8081/api/cars/a81bc81b-dead-4e5d-abff-90865d1e13b1/requests",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars",
+								"a81bc81b-dead-4e5d-abff-90865d1e13b1",
+								"requests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get car's requests",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYW5hZ2VyMSIsImlhdCI6MTY1MTc0NDI0NywiZXhwIjoxNjUxODMwNjQ3fQ.rjrNG3WQVzlyrWE_O2xsglsG5lQcKpIb9Rq0aN4lYSnL0sxsjU8CTxFN5PiA6wGgVZb5fK6fnDYLksmDHFXaSg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/api/cars/c8203520-c8b0-11ec-9d64-0242ac120002/requests",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars",
+								"c8203520-c8b0-11ec-9d64-0242ac120002",
+								"requests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYW5hZ2VyMSIsImlhdCI6MTY1MTY5NDY5OSwiZXhwIjoxNjUxNzgxMDk5fQ.51FJAOY0gefMupw8o7Ma6CS6GesFI4NYo8Eol9aWShmvPkBIiIr-S6nXKlgAuV4-11coFgS4-9eTdZangE2_Mg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/api/cars/c8203520-c8b0-11ec-9d64-0242ac120002/requests/bb0d6cb4-10dd-47a0-94a9-12c3ab57af42",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars",
+								"c8203520-c8b0-11ec-9d64-0242ac120002",
+								"requests",
+								"bb0d6cb4-10dd-47a0-94a9-12c3ab57af42"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change request's status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYW5hZ2VyMiIsImlhdCI6MTY1MTkxMjU1MSwiZXhwIjoxNjUxOTk4OTUxfQ.QrKOnsI2KEthZ8acFAlBHjARufIiKbvnZB_81a7HVHy5dnMzpCEvzkRPL7A9sMxJc5qzLdKtQ6jySG9fmbs2ag",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"ACCEPTED\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8081/api/cars/a81bc81b-dead-4e5d-abff-90865d1e13b1/requests/a82bc31b-dead-6a5d-ad65-90865d1e13b2",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars",
+								"a81bc81b-dead-4e5d-abff-90865d1e13b1",
+								"requests",
+								"a82bc31b-dead-6a5d-ad65-90865d1e13b2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete request",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/api/cars/c8203520-c8b0-11ec-9d64-0242ac120002/requests/f601a29b-8b53-465e-9937-cfe482e8561a",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars",
+								"c8203520-c8b0-11ec-9d64-0242ac120002",
+								"requests",
+								"f601a29b-8b53-465e-9937-cfe482e8561a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all requests",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYW5hZ2VyMiIsImlhdCI6MTY1MTkxMjU1MSwiZXhwIjoxNjUxOTk4OTUxfQ.QrKOnsI2KEthZ8acFAlBHjARufIiKbvnZB_81a7HVHy5dnMzpCEvzkRPL7A9sMxJc5qzLdKtQ6jySG9fmbs2ag",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/api/requests",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"requests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all requests of customer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjdXN0b21lcjEiLCJpYXQiOjE2NTE5NTg0MDQsImV4cCI6MTY1MjA0NDgwNH0.8SB5gEV-gb_UXg8q-KJuzTkdx8DePpIpIqoI5jVcZ_Fv1an0jzZ_aOGsdhGHVcdO-kB-R_vHvgA1qfh1XB3oug",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/api/customers/1/requests",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"customers",
+								"1",
+								"requests"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AuthController",
+			"item": [
+				{
+					"name": "Signup customer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"customer3\",\r\n    \"email\": \"customer3@email.com\",\r\n    \"password\": \"password\",\r\n    \"role\":[\"customer\"],\r\n    \"firstName\": \"Customer\",\r\n    \"lastName\": \"3\",\r\n    \"dateOfBirth\": \"1997-01-10\",\r\n    \"driversLicenseNumber\": \"12345\",\r\n    \"workingPermitNumber\": \"12345\",\r\n    \"identificationDocumentNumber\": \"12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/auth/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Signin customer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"customer2\",\r\n    \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/auth/signin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Signup manager",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"manager2\",\r\n    \"email\": \"manager2@email.com\",\r\n    \"password\": \"password\",\r\n    \"role\":[\"customer\",\"manager\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/auth/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Signin manager",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"manager1\",\r\n    \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/auth/signin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "RentalController",
+			"item": [
+				{
+					"name": "Get all rentals",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYW5hZ2VyMiIsImlhdCI6MTY1MTkxMjU1MSwiZXhwIjoxNjUxOTk4OTUxfQ.QrKOnsI2KEthZ8acFAlBHjARufIiKbvnZB_81a7HVHy5dnMzpCEvzkRPL7A9sMxJc5qzLdKtQ6jySG9fmbs2ag",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/api/rentals",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"rentals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add rental",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYW5hZ2VyMSIsImlhdCI6MTY1MTY4NTk1OSwiZXhwIjoxNjUxNzcyMzU5fQ.B8AqUmoQW9laCMc5k5xtf9zsEsplff4R1gTpBj2ZuGWCvPStrPXP8GAas4B5xBCh6Owr-1QX03f_34KWScO6XA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"pickup_datetime\": \"2022-01-10T17:09:42.411\",\r\n    \"dropoff_datetime\": \"2022-01-13T17:09:42.411\",\r\n    \"pickup_location\": \"Turu tn 5\",\r\n    \"dropoff_location\": \"Delta\",\r\n    \"status\": \"CURRENT\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8081/api/cars/a81bc81b-dead-4e5d-abff-90865d1e13b1/rentals",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars",
+								"a81bc81b-dead-4e5d-abff-90865d1e13b1",
+								"rentals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change rental's information",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYW5hZ2VyMSIsImlhdCI6MTY1MTY4NTk1OSwiZXhwIjoxNjUxNzcyMzU5fQ.B8AqUmoQW9laCMc5k5xtf9zsEsplff4R1gTpBj2ZuGWCvPStrPXP8GAas4B5xBCh6Owr-1QX03f_34KWScO6XA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dropoff_location\": \"Anne\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8081/api/cars/a81bc81b-dead-4e5d-abff-90865d1e13b1/rentals/b1be0e15-f7c7-4133-9e68-1aa8aed6a03a",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars",
+								"a81bc81b-dead-4e5d-abff-90865d1e13b1",
+								"rentals",
+								"b1be0e15-f7c7-4133-9e68-1aa8aed6a03a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete rental",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYW5hZ2VyMSIsImlhdCI6MTY1MTY4NTk1OSwiZXhwIjoxNjUxNzcyMzU5fQ.B8AqUmoQW9laCMc5k5xtf9zsEsplff4R1gTpBj2ZuGWCvPStrPXP8GAas4B5xBCh6Owr-1QX03f_34KWScO6XA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/api/cars/a81bc81b-dead-4e5d-abff-90865d1e13b1/rentals/b1be0e15-f7c7-4133-9e68-1aa8aed6a03a",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars",
+								"a81bc81b-dead-4e5d-abff-90865d1e13b1",
+								"rentals",
+								"b1be0e15-f7c7-4133-9e68-1aa8aed6a03a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a rental",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYW5hZ2VyMSIsImlhdCI6MTY1MTY4NTk1OSwiZXhwIjoxNjUxNzcyMzU5fQ.B8AqUmoQW9laCMc5k5xtf9zsEsplff4R1gTpBj2ZuGWCvPStrPXP8GAas4B5xBCh6Owr-1QX03f_34KWScO6XA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/api/cars/a81bc81b-dead-4e5d-abff-90865d1e13b1/rentals/b1be0e15-f7c7-4133-9e68-1aa8aed6a03a",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars",
+								"a81bc81b-dead-4e5d-abff-90865d1e13b1",
+								"rentals",
+								"b1be0e15-f7c7-4133-9e68-1aa8aed6a03a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a rental (successful)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYW5hZ2VyMSIsImlhdCI6MTY1MTY4NTk1OSwiZXhwIjoxNjUxNzcyMzU5fQ.B8AqUmoQW9laCMc5k5xtf9zsEsplff4R1gTpBj2ZuGWCvPStrPXP8GAas4B5xBCh6Owr-1QX03f_34KWScO6XA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/api/cars/a81bc81b-dead-4e5d-abff-90865d1e13b1/rentals/a81bc81b-dead-6e5d-ad75-90865d1e13b1",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars",
+								"a81bc81b-dead-4e5d-abff-90865d1e13b1",
+								"rentals",
+								"a81bc81b-dead-6e5d-ad75-90865d1e13b1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "InvoiceController",
+			"item": [
+				{
+					"name": "Get all invoices",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYW5hZ2VyMSIsImlhdCI6MTY1MTc2MzAxNiwiZXhwIjoxNjUxODQ5NDE2fQ.mDk2jX-neNCiBX741XUj1-hBbnTWsxlqZYDLNr0Eg443_sNmubK7da8XT3aC1ypjUh6ilv-cGuxn6wuDLN5T0g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/invoices",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"invoices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add invoice",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYW5hZ2VyMSIsImlhdCI6MTY1MTc2NTc1MCwiZXhwIjoxNjUxODUyMTUwfQ.MFAHc7iY3p5A3vEOAuLdzTxdVjJwTPbupFEYjtQd1AgzqrNXvPXsgzDdlxnsLAtWWYSSsg8Xfo87oceTIUaeIA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"date\": \"2022-05-05T18:27:42.411\",\r\n    \"status\": \"UNPAID\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8081/api/cars/a81bc81b-dead-4e5d-abff-90865d1e13b1/rentals/a81bc81b-dead-6e5d-ad75-90865d1e13b1/invoices",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"cars",
+								"a81bc81b-dead-4e5d-abff-90865d1e13b1",
+								"rentals",
+								"a81bc81b-dead-6e5d-ad75-90865d1e13b1",
+								"invoices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get invoice by rental id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYW5hZ2VyMSIsImlhdCI6MTY1MTc2NTcwMCwiZXhwIjoxNjUxODUyMTAwfQ.qraj0TkCQe0sBA5bcqmiIbYkFldvqeHe60TwWlkr5FpJC7QfU93LiornXWy7KCCWMamh-yK6PeOF7uKOvyjB-Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/customers/1/rentals/a81bc81b-abcd-6e5d-ad75-90865d1e13b1/invoices/dd06ca3f-613e-49c2-ae62-ab9d3f455194",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"customers",
+								"1",
+								"rentals",
+								"a81bc81b-abcd-6e5d-ad75-90865d1e13b1",
+								"invoices",
+								"dd06ca3f-613e-49c2-ae62-ab9d3f455194"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get invoice by invoice id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYW5hZ2VyMSIsImlhdCI6MTY1MTc2NTcwMCwiZXhwIjoxNjUxODUyMTAwfQ.qraj0TkCQe0sBA5bcqmiIbYkFldvqeHe60TwWlkr5FpJC7QfU93LiornXWy7KCCWMamh-yK6PeOF7uKOvyjB-Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/invoices/dd06ca3f-613e-49c2-ae62-ab9d3f455194",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"invoices",
+								"dd06ca3f-613e-49c2-ae62-ab9d3f455194"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change invoice (status)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYW5hZ2VyMSIsImlhdCI6MTY1MTc2NTcwMCwiZXhwIjoxNjUxODUyMTAwfQ.qraj0TkCQe0sBA5bcqmiIbYkFldvqeHe60TwWlkr5FpJC7QfU93LiornXWy7KCCWMamh-yK6PeOF7uKOvyjB-Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"date\": \"2021-05-05T18:27:42.411\",\r\n    \"status\": \"PAID\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/customers/1/rentals/a81bc81b-abcd-6e5d-ad75-90865d1e13b1/invoices/dd06ca3f-613e-49c2-ae62-ab9d3f455194",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"customers",
+								"1",
+								"rentals",
+								"a81bc81b-abcd-6e5d-ad75-90865d1e13b1",
+								"invoices",
+								"dd06ca3f-613e-49c2-ae62-ab9d3f455194"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "MANAGER_BEARER",
+			"value": "eyJhbGciOiJIUzUxMiJ9.eyJzd"
+		}
+	]
 }
