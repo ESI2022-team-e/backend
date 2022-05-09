@@ -25,7 +25,7 @@ public class InvoiceService {
     private RentalRepository rentalRepository;
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private CustomerService customerService;
 
 
     public ResponseEntity<Invoice> getInvoice(UUID id) {
@@ -43,19 +43,19 @@ public class InvoiceService {
         Invoice invoice = invoiceRepository.findByRentalId(rentalId).orElse(null);
         if (invoice == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        if (!currentUser.getId().equals(invoice.getCustomer().getId()))
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        // TODO: should any ROLE_MANAGER also be able to access this api?
+        long customerId = invoice.getCustomer().getId();
+        ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser, customerId);
+        if (customerResponseEntity.getBody() == null) {
+            return new ResponseEntity<>(customerResponseEntity.getStatusCode());
+        }
         return new ResponseEntity<>(invoice, HttpStatus.OK);
     }
 
     public ResponseEntity<List<Invoice>> getAllInvoicesByCustomerId(UserDetailsImpl currentUser, long customerId) {
-        Customer customer = customerRepository.findById(customerId).orElse(null);
-        if (customer == null)
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        if (!currentUser.getId().equals(customer.getId()))
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        // TODO: should any ROLE_MANAGER also be able to access this api?
+        ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser, customerId);
+        if (customerResponseEntity.getBody() == null) {
+            return new ResponseEntity<>(customerResponseEntity.getStatusCode());
+        }
         return new ResponseEntity<>(invoiceRepository.findByCustomerId(customerId), HttpStatus.OK);
     }
 
@@ -72,8 +72,7 @@ public class InvoiceService {
         invoice.setRental(rental);
         invoice.setCustomer(rental.getCustomer());
         invoiceRepository.save(invoice);
-        return ResponseEntity.ok("Request added successfully!");
-
+        return ResponseEntity.ok("Invoice added successfully!");
     }
 
     public ResponseEntity<?> updateInvoice(UserDetailsImpl currentUser, UUID invoiceId, Invoice newInvoice) {
@@ -81,14 +80,15 @@ public class InvoiceService {
         if (invoice == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        if (!currentUser.getId().equals(invoice.getCustomer().getId())) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        long customerId = invoice.getCustomer().getId();
+        ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser, customerId);
+        if (customerResponseEntity.getBody() == null) {
+            return new ResponseEntity<>(customerResponseEntity.getStatusCode());
         }
-        // TODO: should manager be able to change the invoice status as well? - I propose no.
         // only allow changing the status of the invoice
         invoice.setStatus(newInvoice.getStatus());
         invoiceRepository.save(invoice);
-        return ResponseEntity.ok("Request updated successfully!");
+        return ResponseEntity.ok("Invoice updated successfully!");
     }
 
 }

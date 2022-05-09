@@ -23,22 +23,22 @@ public class RequestController {
         this.requestService = requestService;
     }
 
-    @RequestMapping("requests")
+    @RequestMapping("/requests")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<List<Request>> getAllRequests() {
         return requestService.getAllRequests();
     }
 
-    @RequestMapping("cars/{carId}/requests")
+    @RequestMapping("/cars/{carId}/requests")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<List<Request>> getAllRequestsByCarId(@PathVariable UUID carId) {
         return requestService.getAllRequestsByCarId(carId);
     }
 
-    @RequestMapping("cars/{carId}/requests/{id}")
+    @RequestMapping("/cars/{carId}/requests/{requestId}")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<Request> getRequest(@PathVariable UUID id) {
-        return requestService.getRequest(id);
+    public ResponseEntity<Request> getRequest(@PathVariable UUID requestId) {
+        return requestService.getRequest(requestId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/cars/{carId}/requests")
@@ -50,14 +50,12 @@ public class RequestController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}/requests/{requestId}")
     public ResponseEntity<?> updateRequest(@AuthenticationPrincipal final UserDetailsImpl currentUser, @RequestBody Request request, @PathVariable UUID carId, @PathVariable UUID requestId) {
-        requestService.updateRequest(currentUser, request, requestId);
-        return ResponseEntity.ok("Request updated successfully!");
+        return requestService.updateRequest(currentUser, request, requestId);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/cars/{carId}/requests/{id}")
-    public ResponseEntity<?> deleteRequest(@PathVariable UUID id) {
-        requestService.deleteRequest(id);
-        return ResponseEntity.ok("Request deleted successfully!");
+    @RequestMapping(method = RequestMethod.DELETE, value = "/cars/{carId}/requests/{requestId}")
+    public ResponseEntity<?> deleteRequest(@PathVariable UUID requestId) {
+        return requestService.deleteRequest(requestId);
     }
 
     @GetMapping("/customers/{customerId}/requests")

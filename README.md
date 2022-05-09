@@ -21,10 +21,10 @@ For the first time:
     * Create a database with the name _project_
 3. Open the project in IntelliJ (or VSCode)
 4. Open file `application.properties` and on line 9 change `spring.jpa.hibernate.ddl-auto` from `update` to `create`
-5. Run the project (there will be an error running it the first time)
+5. Run the project
 6. Stop the project
 7. Change `spring.jpa.hibernate.ddl-auto` back to `update`
-8. Run the project again (should be OK)
+8. Run the project again
 
 Try it out:
 

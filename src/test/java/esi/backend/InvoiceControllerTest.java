@@ -71,7 +71,7 @@ public class InvoiceControllerTest {
                 .perform(MockMvcRequestBuilders
                         .get("/api/customers/1/rentals/a81bc81b-ffff-6e5d-ad75-90865d1e13b1/invoices/dd06ca3f-614e-49c2-ae62-ab9d3f455194"))
                 .andDo(print())
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -132,7 +132,7 @@ public class InvoiceControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonMapper.writeValueAsString(new Invoice())))
                 .andDo(print())
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isOk());
     }
 
     @Test

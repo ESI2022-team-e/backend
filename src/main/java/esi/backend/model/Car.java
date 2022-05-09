@@ -10,20 +10,27 @@ import java.util.UUID;
 @Entity
 @Table(name = "cars")
 public class Car {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    @Column(name = "mark")
+
     private String mark;
-    @Column(name = "model")
+
     private String model;
-    @Column(name = "nr_of_seats")
+
     private int nr_of_seats;
+
     private String transmission_type;
+
     private String fuel_type;
+
     private double daily_cost;
+
     private int year;
+
     private String licence_plate;
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "car", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Rental> rentals = new HashSet<>();
