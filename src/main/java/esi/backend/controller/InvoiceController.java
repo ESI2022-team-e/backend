@@ -39,6 +39,7 @@ public class InvoiceController {
         return invoiceService.getInvoiceByRentalId(currentUser, rentalId);
     }
 
+
     @RequestMapping("/customers/{customerId}/invoices")
     public ResponseEntity<List<Invoice>> getAllInvoicesByCustomerId(@AuthenticationPrincipal final UserDetailsImpl currentUser, @PathVariable long customerId) {
         return invoiceService.getAllInvoicesByCustomerId(currentUser, customerId);
@@ -46,13 +47,14 @@ public class InvoiceController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/cars/{carId}/rentals/{rentalId}/invoices")
     @PreAuthorize("hasRole('MANAGER')")
-    public void addInvoice(@RequestBody Invoice invoice, @PathVariable UUID rentalId) {
-        invoiceService.addInvoice(invoice, rentalId);
+    public ResponseEntity<?> addInvoice(@RequestBody Invoice invoice, @PathVariable UUID rentalId) {
+        return invoiceService.addInvoice(invoice, rentalId);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/customers/{customerId}/rentals/{rentalId}/invoices/{invoiceId}")
-    public void updateInvoice(@AuthenticationPrincipal final UserDetailsImpl currentUser, @PathVariable UUID invoiceId, @RequestBody Invoice invoice) {
-        invoiceService.updateInvoice(currentUser, invoiceId, invoice);
+    public ResponseEntity<?> updateInvoice(@AuthenticationPrincipal final UserDetailsImpl currentUser, @PathVariable UUID invoiceId, @RequestBody Invoice invoice) {
+        return invoiceService.updateInvoice(currentUser, invoiceId, invoice);
+
     }
 
 }
