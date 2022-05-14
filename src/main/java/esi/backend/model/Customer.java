@@ -10,11 +10,17 @@ import java.util.Set;
 @Entity
 public class Customer extends User {
 
+    @JsonIgnore
     private String firstName;
+    @JsonIgnore
     private String lastName;
+    @JsonIgnore
     private LocalDate dateOfBirth;
+    @JsonIgnore
     private String driversLicenseNumber;
+    @JsonIgnore
     private String workingPermitNumber;
+    @JsonIgnore
     private String identificationDocumentNumber;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer", cascade = CascadeType.ALL)
