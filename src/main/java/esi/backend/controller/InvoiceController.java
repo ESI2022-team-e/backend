@@ -23,9 +23,8 @@ public class InvoiceController {
     }
 
     @RequestMapping("/invoices/{invoiceId}")
-    @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<Invoice> getInvoice(@PathVariable UUID invoiceId) {
-        return invoiceService.getInvoice(invoiceId);
+    public ResponseEntity<Invoice> getInvoice(@AuthenticationPrincipal final UserDetailsImpl currentUser, @PathVariable UUID invoiceId) {
+        return invoiceService.getInvoice(invoiceId, currentUser);
     }
 
     @RequestMapping("/invoices")
