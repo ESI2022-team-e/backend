@@ -45,7 +45,7 @@ public class InvoiceControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "MANAGER")
+    @WithUserDetails("manager1")
     public void getInvoiceManagerTest() throws Exception {
         this.mockMvc
                 .perform(MockMvcRequestBuilders
@@ -55,13 +55,23 @@ public class InvoiceControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "CUSTOMER")
+    @WithUserDetails("customer2")
     public void getInvoiceCustomerTest() throws Exception {
         this.mockMvc
                 .perform(MockMvcRequestBuilders
                         .get("/api/invoices/dd06ca3f-613e-49c2-ae62-ab9d3f455194"))
                 .andDo(print())
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithUserDetails("customer1")
+    public void getInvoiceWrongCustomerTest() throws Exception {
+        this.mockMvc
+                .perform(MockMvcRequestBuilders
+                        .get("/api/invoices/dd06ca3f-613e-49c2-ae62-ab9d3f455194"))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
