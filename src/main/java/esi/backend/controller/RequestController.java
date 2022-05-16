@@ -37,7 +37,7 @@ public class RequestController {
 
     @RequestMapping("/cars/{carId}/requests/{requestId}")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<Request> getRequest(@PathVariable UUID requestId) {
+    public ResponseEntity<Request> getRequest(@PathVariable UUID requestId, @PathVariable String carId) {
         return requestService.getRequest(requestId);
     }
 
@@ -54,7 +54,7 @@ public class RequestController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/cars/{carId}/requests/{requestId}")
-    public ResponseEntity<?> deleteRequest(@PathVariable UUID requestId) {
+    public ResponseEntity<?> deleteRequest(@PathVariable UUID requestId, @PathVariable String carId) {
         return requestService.deleteRequest(requestId);
     }
 
