@@ -25,6 +25,12 @@ INSERT INTO requests(id, pickup_datetime, dropoff_datetime, pickup_location, dro
 VALUES ('a82bc31b-dead-6a5d-ad65-90865d1e13b2', '2022-01-10T17:09:42.411', '2022-01-10T17:09:42.411', 'Lõunakeskus',
         'Kesklinn', 1, 'a81bc81b-dead-4e5d-abff-90865d1e13b1', 1);
 
+INSERT INTO requests(id, pickup_datetime, dropoff_datetime, pickup_location, dropoff_location, status, car_id,
+                     customer_id)
+VALUES ('d22be32f-dead-6a5d-ad65-90865d1e13b2', '2022-05-22T17:09:42.411', '2022-05-28T17:09:42.411', 'Lõunakeskus',
+        'Kesklinn', 1, 'c8203520-c8b0-11ec-9d64-0242ac120002', 1);
+
+
 INSERT INTO rentals (id, pickup_datetime, dropoff_datetime, pickup_location, dropoff_location, status, car_id,
                      customer_id)
 VALUES ('a81bc81b-dead-6e5d-ad75-90865d1e13b1', '2022-01-10T17:09:42.411', '2022-01-10T17:09:42.411', 'Lõunakeskus',
