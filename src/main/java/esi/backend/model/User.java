@@ -1,5 +1,7 @@
 package esi.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -29,6 +31,7 @@ public class User {
 
     @NotBlank
     @Size(max = 120)
+    @JsonIgnore
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

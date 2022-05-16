@@ -26,7 +26,6 @@ public class Invoice {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id")
-    @JsonIgnore
     private Customer customer;
 
     public Invoice() {

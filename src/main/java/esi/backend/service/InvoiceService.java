@@ -3,7 +3,6 @@ package esi.backend.service;
 import esi.backend.model.Customer;
 import esi.backend.model.Invoice;
 import esi.backend.model.Rental;
-import esi.backend.repository.CustomerRepository;
 import esi.backend.repository.InvoiceRepository;
 import esi.backend.repository.RentalRepository;
 import esi.backend.security.service.UserDetailsImpl;
@@ -28,11 +27,16 @@ public class InvoiceService {
     private CustomerService customerService;
 
 
-    public ResponseEntity<Invoice> getInvoice(UUID id) {
+    public ResponseEntity<Invoice> getInvoice(UUID id, UserDetailsImpl currentUser) {
         Invoice invoice = invoiceRepository.findById(id).orElse(null);
-        return (invoice == null)
-                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
-                : new ResponseEntity<>(invoice, HttpStatus.OK);
+        if (invoice == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        long customerId = invoice.getCustomer().getId();
+        ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser, customerId);
+        if (customerResponseEntity.getBody() == null) {
+            return new ResponseEntity<>(customerResponseEntity.getStatusCode());
+        }
+        return new ResponseEntity<>(invoice, HttpStatus.OK);
     }
 
     public ResponseEntity<List<Invoice>> getAllInvoices() {
@@ -76,6 +80,7 @@ public class InvoiceService {
     }
 
     public ResponseEntity<?> updateInvoice(UserDetailsImpl currentUser, UUID invoiceId, Invoice newInvoice) {
+        System.out.println("!!! " + currentUser);
         Invoice invoice = invoiceRepository.findById(invoiceId).orElse(null);
         if (invoice == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
