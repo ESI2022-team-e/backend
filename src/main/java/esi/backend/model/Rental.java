@@ -25,13 +25,11 @@ public class Rental {
     private RentalStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "car_id")
-    @JsonIgnore
+    @JoinColumn(name = "car_id",referencedColumnName = "id")
     private Car car;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
-    @JsonIgnore
+    @JoinColumn(name = "customer_id",referencedColumnName = "id")
     private Customer customer;
   
     @OneToOne(mappedBy = "rental")

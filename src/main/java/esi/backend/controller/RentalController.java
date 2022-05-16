@@ -53,7 +53,7 @@ public class RentalController {
 
     @RequestMapping("/customers/{customerId}/rentals/{rentalId}")
     @PreAuthorize("hasRole('CUSTOMER') or hasRole('MANAGER')")
-    public ResponseEntity<Rental> getRentalByCustomerId(
+    public ResponseEntity<?> getRentalByCustomerId(
             @AuthenticationPrincipal UserDetailsImpl currentUser,
             @PathVariable long customerId,
             @PathVariable UUID rentalId) {
@@ -68,7 +68,7 @@ public class RentalController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/cars/{carId}/rentals/{rentalId}")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('CUSTOMER')")
     public ResponseEntity<?> updateRental(@RequestBody Rental rental, @PathVariable UUID
             carId, @PathVariable UUID rentalId) {
         return rentalService.updateRental(rental, carId, rentalId);

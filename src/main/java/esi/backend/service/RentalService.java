@@ -1,6 +1,7 @@
 package esi.backend.service;
 
 import esi.backend.model.*;
+import esi.backend.payload.response.MessageResponse;
 import esi.backend.repository.CarRepository;
 import esi.backend.repository.InvoiceRepository;
 import esi.backend.repository.RentalRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,15 +60,15 @@ public class RentalService {
         return new ResponseEntity<>(rentals, HttpStatus.OK);
     }
 
-    public ResponseEntity<Rental> getRentalByCustomerId(UserDetailsImpl currentUser,long customerId,UUID rentalId){
+    public ResponseEntity<?> getRentalByCustomerId(UserDetailsImpl currentUser,long customerId,UUID rentalId){
         ResponseEntity<Customer> customerResponseEntity = customerService.authenticateCustomer(currentUser, customerId);
         if (customerResponseEntity.getBody() == null)
             return new ResponseEntity<>(customerResponseEntity.getStatusCode());
         Rental rental = customerResponseEntity.getBody().getRentals().stream().filter(
                 req -> req.getId().equals(rentalId)).findFirst().orElse(null);
         return (rental == null)
-                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
-                : new ResponseEntity<>(rental, HttpStatus.OK);
+                ? ResponseEntity.internalServerError().body("Rental not found.")
+                : ResponseEntity.ok(rental);
     }
 
 
@@ -76,16 +78,17 @@ public class RentalService {
     }
 
     public ResponseEntity<?> updateRental(Rental rental, UUID carId, UUID rentalId) {
+
         Rental existingRental = rentalRepository.findRentalByIdAndCarId(rentalId,carId).orElse(null);
 
-        if (existingRental == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (existingRental == null) return ResponseEntity.internalServerError().body("Rental not found.");
       
-        if (existingRental.getStatus().equals(RentalStatus.DONE)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (existingRental.getStatus().equals(RentalStatus.DONE)) return ResponseEntity.badRequest().body(new MessageResponse("Rental is already complete."));
 
         if (rental.getPickupDatetime() != null || rental.getDropoffDatetime() != null)
             existingRental = extendRental(rental, existingRental);
       
-        if (existingRental == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (existingRental == null) return ResponseEntity.badRequest().body("Rental could not be updated.");
 
         if (rental.getPickupLocation() != null)
             existingRental.setPickupLocation(rental.getPickupLocation());
@@ -94,8 +97,9 @@ public class RentalService {
             existingRental.setDropoffLocation(rental.getDropoffLocation());
 
         if (rental.getStatus() != null){
-            if (rental.getStatus().equals(RentalStatus.DONE) && (existingRental.getStatus().equals(RentalStatus.CURRENT)))
+            if (rental.getStatus().equals(RentalStatus.DONE) && (existingRental.getStatus().equals(RentalStatus.CURRENT))) {
                 createInvoice(existingRental);
+            }
             existingRental.setStatus(rental.getStatus());
             }
 
@@ -109,13 +113,18 @@ public class RentalService {
     }
 
     private Rental extendRental(Rental rental, Rental existingRental){
-        if (rental.getDropoffDatetime() != null) existingRental.setDropoffDatetime(rental.getDropoffDatetime());
+        if (rental.getDropoffDatetime() != null) {
+            existingRental.setDropoffDatetime(rental.getDropoffDatetime());
+        }
         if (rental.getPickupDatetime() != null) {
             if (existingRental.getStatus().equals(RentalStatus.UPCOMING))
                 existingRental.setPickupDatetime(rental.getPickupDatetime());
         }
-        return rentalRepository.getRentalByPickupDatetimeBeforeAndDropoffDatetimeAfter(
-                existingRental.getDropoffDatetime(),existingRental.getPickupDatetime()).isEmpty()
+        List<Rental> overlap = rentalRepository.findAll();
+        overlap.remove(existingRental);
+        overlap.removeAll(rentalRepository.findRentalsByDropoffDatetimeBeforeAndCarIs(existingRental.getPickupDatetime(), existingRental.getCar()));
+        overlap.removeAll(rentalRepository.findRentalsByPickupDatetimeAfterAndCarIs(existingRental.getDropoffDatetime(), existingRental.getCar()));
+        return overlap.isEmpty()
                 ? existingRental
                 : null;
     }
