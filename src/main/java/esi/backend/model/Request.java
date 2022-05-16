@@ -25,13 +25,11 @@ public class Request {
     private RequestStatus status;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "car_id")
-    @JsonIgnore
+    @JoinColumn(name = "car_id",referencedColumnName = "id")
     private Car car;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "customer_id")
-    @JsonIgnore
+    @JoinColumn(name = "customer_id",referencedColumnName = "id")
     private Customer customer;
 
     public Request() {

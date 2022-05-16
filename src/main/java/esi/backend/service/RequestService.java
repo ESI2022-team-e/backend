@@ -6,6 +6,7 @@ import esi.backend.repository.CustomerRepository;
 import esi.backend.repository.RentalRepository;
 import esi.backend.repository.RequestRepository;
 import esi.backend.security.service.UserDetailsImpl;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -100,14 +101,17 @@ public class RequestService {
             request.setDropoffLocation(newData.getDropoffLocation());
         }
         if (newData.getStatus() != null) {
+            if (newData.getStatus().equals(RequestStatus.ACCEPTED)){
+                if (request.getStatus().equals(RequestStatus.ACCEPTED))
+                    return ResponseEntity.badRequest().body("This request is already accepted.");
+                if (request.getStatus().equals(RequestStatus.PENDING)){
+                    request.setStatus(newData.getStatus());
+                    createRental(request);
+                }
+            }
+
             if (newData.getStatus().equals(RequestStatus.CANCELLED) || newData.getStatus().equals(RequestStatus.REJECTED) || newData.getStatus().equals(RequestStatus.PENDING)) {
                 request.setStatus(newData.getStatus());
-            }
-            if (newData.getStatus().equals(RequestStatus.ACCEPTED) && currentUser.isManager()) {
-                request.setStatus(newData.getStatus());
-                createRental(request);
-                requestRepository.save(request);
-                return ResponseEntity.ok("Request updated successfully and new rental created!");
             }
         }
         requestRepository.save(request);
