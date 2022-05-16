@@ -180,6 +180,6 @@ public class RentalControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonMapper.writeValueAsString(new Rental())))
                 .andDo(print())
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk());
     }
 }

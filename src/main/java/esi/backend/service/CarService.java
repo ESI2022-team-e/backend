@@ -31,7 +31,8 @@ public class CarService {
             List<Request> requests = new ArrayList<>(requestRepository.findAll());
             if (!requests.isEmpty()) {
                 for (Request r : requests) {
-                    if (r.getPickupDatetime().isBefore(endTime) && startTime.isBefore(r.getDropoffDatetime())) {
+                    if (!(r.getPickupDatetime().isBefore(startTime) && r.getDropoffDatetime().isBefore(startTime) ||
+                            endTime.isBefore(r.getPickupDatetime()) && endTime.isBefore(r.getDropoffDatetime()))) {
                         if (r.getStatus() == RequestStatus.ACCEPTED || r.getStatus() == RequestStatus.PENDING) {
                             cars.remove(r.getCar());
                         }
