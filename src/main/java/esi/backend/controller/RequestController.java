@@ -37,7 +37,13 @@ public class RequestController {
 
     @RequestMapping("/cars/{carId}/requests/{requestId}")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<Request> getRequest(@PathVariable UUID requestId, @PathVariable String carId) {
+    public ResponseEntity<Request> getRequest(@PathVariable UUID requestId, @PathVariable UUID carId) {
+        return requestService.getRequest(requestId);
+    }
+
+    @RequestMapping("/requests/{requestId}")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<Request> getRequestById(@PathVariable UUID requestId) {
         return requestService.getRequest(requestId);
     }
 
