@@ -11,10 +11,11 @@ VALUES (1, 'ROLE_CUSTOMER'),
        (2, 'ROLE_MANAGER');
 
 INSERT INTO users(dtype, id, username, email, password)
-VALUES ('Customer', 1, 'customer1', 'customer1@email.com', '$2a$10$o3pbWzJM3cHq2O//i1oyduYarn6eMytd1M1bS9Buzn/27J0tFnrsS'),
-       ('Customer', 2, 'customer2', 'customer2@email.com', '$2a$10$o3pbWzJM3cHq2O//i1oyduYarn6eMytd1M1bS9Buzn/27J0tFnrsS'),
-       ('User', 3, 'manager1', 'manager1@email.com', '$2a$10$ldLnBKd/8B0tjRwVxFeAO.xyi/NCBTRjmEuFQ8udAh43t6J6mX4Ua');
+VALUES ('User', 3, 'manager1', 'manager1@email.com', '$2a$10$ldLnBKd/8B0tjRwVxFeAO.xyi/NCBTRjmEuFQ8udAh43t6J6mX4Ua');
 
+INSERT INTO users(dtype, id, username, email, password,first_name, last_name, date_of_birth,drivers_license_number,working_permit_number,identification_document_number)
+VALUES ('Customer', 1, 'customer1', 'customer1@email.com', '$2a$10$o3pbWzJM3cHq2O//i1oyduYarn6eMytd1M1bS9Buzn/27J0tFnrsS','John','Doe','1989-01-10','1234','1234','1234'),
+       ('Customer', 2, 'customer2', 'customer2@email.com', '$2a$10$o3pbWzJM3cHq2O//i1oyduYarn6eMytd1M1bS9Buzn/27J0tFnrsS','Jane','Doe','1984-05-22','2345','2345','2345');
 INSERT INTO user_roles(user_id, role_id)
 VALUES (1, 1),
        (2, 1),
